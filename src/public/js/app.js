@@ -1711,19 +1711,24 @@ if(formTLTB) {
 
 // Hàm BẬT màn hình loading
 function showLoading() {
-    document.getElementById('loading-overlay').style.display = 'flex';
+    const loader = document.getElementById('loading-overlay');
+    if (!loader) {
+        loader.style.display = 'flex';
+    }
+    document.body.style.overflow = "hidden";
 }
 
 // Hàm TẮT màn hình loading
 function hideLoading() {
-    document.getElementById('loading-overlay').style.display = 'none';
-}
-window.addEventListener('load', function() {
-    // Ẩn màn hình loading
     const loader = document.getElementById('loading-overlay');
     if (loader) {
         loader.style.display = 'none';
     }
+    document.body.style.overflow = "auto";
+}
+window.addEventListener('load', function() {
+    hideLoading();
+    
 });
 document.addEventListener("DOMContentLoaded", function() {
     // Tìm tất cả thẻ <a> trong trang
@@ -1735,7 +1740,6 @@ document.addEventListener("DOMContentLoaded", function() {
             const target = this.getAttribute('target');
             
             if (href && href !== '#' && !href.startsWith('javascript') && target !== '_blank') {
-                
                 showLoading();
             }
         });
