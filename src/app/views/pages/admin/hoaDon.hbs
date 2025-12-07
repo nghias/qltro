@@ -1,0 +1,259 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Lấy tham số 'status' trên thanh địa chỉ
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
+        if (status) {
+            let title = '';
+            let type = 'success';
+            
+            switch (status) {
+                case 'them':
+                    title = 'Đã thêm thành công!';
+                    break;
+                
+                case 'sua':
+                    title = 'Đã sửa thành công!';
+                    break;
+
+                case 'xoa':
+                    title = 'Đã xóa thành công!';
+                    break;
+
+                case 'xntra':
+                    title = 'Đã xác nhận trả thành công!';
+                    break;
+
+                case 'fail': 
+                    title = 'Không thành công';
+                    type = 'failure';;
+                    break;
+
+                case 'failthem': 
+                    title = 'Đã có hóa đơn tháng này không thể thêm';
+                    type = 'failure';;
+                    break;
+
+                default:
+                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
+                    // Không hiện popup, không làm gì cả
+                    return; 
+            }
+
+            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
+            showNotification(type, title,);
+
+            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
+            const newUrl = window.location.pathname;
+            window.history.replaceState(null, null, newUrl);
+        }
+    });
+</script>
+<div class="container" style="margin-top: 60px; margin-bottom: 60px;">
+    <div class="search-bar-container">
+        <form action="/admin/diennuoc" method="get" class="input-group search-box">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchDN" value="{{search}}">
+            <button class="btn btn-main" type="submit">Tìm kiếm</button>
+        </form>
+        <form action="/admin/hoadon" method="POST">
+            <button class="btn btn-main">Tạo hóa đơn</button>
+        </form>
+    </div>
+    {{#if empty}}
+        <h3 class="text-center text-muted">Không có hóa đơn nào trong danh sách!</h3>
+    {{else}}
+    {{#each dsHoaDon}}
+    <!-- ==== CARD 1 ==== -->
+    <div class="bill-card">
+        <div class="bill-header">
+            <span>{{this.TenPhong}}</span>
+            <a href="javascript:void(0)" onclick="openInvoiceModal('{{this.MaHD}}','admin')" class="text-white text-decoration-none">{{this.NgayTinh}}</a>
+        </div>
+
+        <div class="row p-3">
+
+            <!-- Table -->
+            <div class="col-md-8">
+                <table class="table table-borderless mb-2">
+                    <tr>
+                        <th class="text-success">Tên chi phí</th>
+                        <th class="text-end text-success">Giá</th>
+                    </tr>
+                    <tr>
+                        <td class="text-start">Tiền phòng</td><td class="text-end">{{this.TienPhong}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-start">Tiền điện</td><td class="text-end">{{this.TienDien}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-start">Tiền nước</td><td class="text-end">{{this.TienNuoc}}</td>
+                    </tr>
+                    <tr>
+                        <td class="text-start">Phụ phí</td><td class="text-end">{{this.PhuThu}}</td>
+                    </tr>
+                </table>
+
+                <hr>
+                <div class="d-flex justify-content-between fw-bold">
+                    <span>Tổng cộng</span><span>{{this.TongTien}}</span>
+                </div>
+            </div>
+
+            <div class="col-md-4 text-center d-flex flex-column justify-content-center">
+                {{#if (eq this.TrangThai "Chưa thanh toán")}}
+                <p class="fw-bold"><span class="status-dot" style="background:red;"></span>
+                    Chưa thanh toán
+                </p>
+                {{!-- Sửa --}}
+                <button class="btn btn-success btn-custom mb-2" onclick="XoaHoaDon('{{this.MaHD}}')">Xóa</button>
+                {{/if}}
+                {{#if (eq this.TrangThai "Chờ thanh toán")}}
+                <p class="fw-bold"><span class="status-dot" style="background:yellow;"></span>
+                    Chờ thanh toán
+                </p>
+                {{!-- Xác nhận đã trả --}}
+                <button class="btn btn-success btn-custom mb-2" onclick="XNTraHHD('{{this.MaHD}}')">Xác Nhận Đã Trả</button>
+                {{/if}}
+                {{#if (eq this.TrangThai "Đã thanh toán")}}
+                <p class="fw-bold"><span class="status-dot" style="background:green;"></span>
+                    Đã thanh toán
+                </p>
+                {{#if this.isKetThuc}}
+                {{!-- Xóa --}}
+                <button class="btn btn-success btn-custom mb-2" onclick="XoaHoaDon('{{this.MaHD}}')">Xóa</button>
+                {{/if}}
+                {{/if}}
+                <button type="button" class="btn btn-delete btn-custom" onclick="openInvoiceModal('{{this.MaHD}}','admin')">Xem chi tiết</button>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+    {{/if}}
+</div>
+{{!-- Xem chi tiết --}}
+<div id="invoiceModalDetail" class="custom-overlay" onclick="closeInvoiceModal()">
+    
+    <div class="custom-dialog"
+    onclick="event.stopPropagation()">
+        <div class="bg-primary text-white p-3 d-flex justify-content-between align-items-center">
+            <div>
+                <h5 class="mb-0 fw-bold text-uppercase">Chi Tiết Hóa Đơn Tiền Trọ</h5>
+            </div>
+            {{!-- Đóng form --}}
+            <button type="button" class="btn-close btn-close-white" onclick="closeInvoiceModal()"></button>
+        </div>
+
+        <div class="custom-body">
+            
+            <div class="row mb-4">
+                <div class="col-md-6">
+                    <p class="mb-1"><strong>Phòng:</strong> <span class="d-inline hdTenPhong"></span></p>
+                    <p class="mb-1"><strong>Ngày lập:</strong> <span class="d-inline hdNgayTao">30/11/2025</span></p>
+                </div>
+                <div class="col-md-6 text-md-end hdTrangThai">
+                    <span class="badge bg-warning text-dark fs-6">Chờ thanh toán</span>
+                </div>
+            </div>
+
+            <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">1. Chi tiết Điện & Nước</h6>
+            <div class="table-responsive mb-4">
+                <table class="table table-bordered table-striped align-middle text-center">
+                    <thead class="table-light">
+                        <tr>
+                            <th class="text-start">Dịch vụ</th>
+                            <th>CS Cũ</th>
+                            <th>CS Mới</th>
+                            <th>Tiêu thụ</th>
+                            <th class="text-end">Đơn giá</th>
+                            <th class="text-end">Thành tiền</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-start fw-bold"><i class="fas fa-bolt text-warning me-2"></i>Điện</td>
+                            <td class="csdcu"></td>
+                            <td class="csdmoi"></td>
+                            <td class="fw-bold text-primary tieuthudien">kWh</td>
+                            <td class="text-end giadien"> ₫</td>
+                            <td class="text-end fw-bold tongtiendien">₫</td>
+                        </tr>
+                        <tr>
+                            <td class="text-start fw-bold"><i class="fas fa-tint text-info me-2"></i>Nước</td>
+                            <td class="csncu"></td>
+                            <td class="csnmoi"></td>
+                            <td class="fw-bold text-primary tieuthunuoc">m³</td>
+                            <td class="text-end gianuoc"></td>
+                            <td class="text-end fw-bold tongtiennuoc"></td>
+                        </tr>
+                        <tr class="table-primary">
+                            <td colspan="5" class="text-end fw-bold text-uppercase small">Tổng tiền điện nước</td>
+                            <td class="text-end fw-bold text-danger tiendn"> ₫</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">2. Các khoản phụ phí</h6>
+                    <ul class="list-group mb-3" id="list-phu-phi"></ul>
+                </div>
+
+                <div class="col-md-6">
+                    <h6 class="fw-bold text-primary border-bottom pb-2 mb-3">3. Tổng kết hóa đơn</h6>
+                    <div class="bg-light p-3 rounded border">
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tiền phòng:</span>
+                            <span class="fw-bold tienphong">₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tiền điện & nước:</span>
+                            <span class="fw-bold tongdn">₫</span>
+                        </div>
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Tổng phụ phí:</span>
+                            <span class="fw-bold tienpp"> ₫</span>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <span class="fw-bold text-uppercase">Tổng thanh toán:</span>
+                            <span class="fs-4 fw-bold text-danger thanhtien">₫</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white p-3 border-top text-end">
+            <button type="button" class="btn btn-secondary me-2" onclick="closeInvoiceModal()">Đóng</button>
+            <button type="button" class="btn btn-success"><i class="fas fa-print me-1"></i> In hóa đơn</button>
+        </div>
+    </div>
+</div>
+
+
+{{!-- Xóa --}}
+<div class="form-hoadon-xn-cover form-cover z-3 fixed-top d-none justify-content-center align-items-center" 
+onclick="closeForm('.form-hoadon-xn-cover')">
+    <div class="p-3 rounded-2 w-auto h-auto position-relative" 
+    onclick="event.stopPropagation()" 
+    style="background-color: #E8E8E8; min-width: 400px; margin-top: 60px;">
+        {{!-- Nút đóng form --}}
+        <button 
+        class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder" 
+        onclick="closeForm('.form-hoadon-xn-cover')"></button>
+        <h3 class="form-hoadon-xn-title text-center text-success mb-4">Xóa Phụ Phí</h3>
+
+        <form class="form-hoadon-xn" action="" method="POST">
+            <div class="text-center">
+                <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
+                {{!-- Nút hủy xóa --}}
+                <button class="btn btn-delete px-4" style="width: auto; margin-left: 10px;" type="reset" 
+                onclick="closeForm('.form-hoadon-xn-cover')">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>

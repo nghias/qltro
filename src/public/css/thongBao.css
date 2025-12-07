@@ -1,0 +1,95 @@
+/* --- Giao diện Gmail Style --- */
+
+/* 1. Hàng thông báo chung */
+.gmail-row {
+    border-bottom: 1px solid #f0f0f0; /* Đường kẻ mờ */
+    transition: box-shadow 0.1s, background-color 0.1s;
+    cursor: pointer;
+    color: #202124; /* Màu chữ đen xám chuẩn Google */
+}
+
+/* Hover: Tạo hiệu ứng đổ bóng nổi lên */
+.gmail-row:hover {
+    box-shadow: inset 1px 0 0 #dadce0, inset -1px 0 0 #dadce0, 0 1px 2px 0 rgba(60,64,67,.3), 0 1px 3px 1px rgba(60,64,67,.15);
+    z-index: 1; /* Để bóng đè lên hàng khác */
+    background-color: #fff;
+}
+
+/* 2. Trạng thái CHƯA ĐỌC (Unread) */
+/* Gmail dùng nền trắng tinh cho tin chưa đọc, nền xám nhẹ cho đã đọc */
+.gmail-row.unread {
+    background-color: #fff; 
+    font-weight: 700; /* In đậm toàn bộ */
+}
+.gmail-row.unread .gmail-sender,
+.gmail-row.unread .gmail-subject,
+.gmail-row.unread .gmail-date {
+    font-weight: bold;
+    color: #000;
+}
+
+/* Trạng thái ĐÃ ĐỌC (Read) */
+.gmail-row:not(.unread) {
+    background-color: #f7f9fa; /* Xám rất nhạt */
+}
+.gmail-row:not(.unread) .gmail-sender,
+.gmail-row:not(.unread) .gmail-subject {
+    font-weight: normal;
+}
+
+/* 3. Căn chỉnh các cột */
+/* Cột checkbox và sao */
+.gmail-actions {
+    min-width: 60px;
+}
+
+/* Cột người gửi: Cố định độ rộng để thẳng hàng */
+.gmail-sender {
+    width: 200px; /* Độ rộng cột người gửi */
+    min-width: 200px;
+}
+
+/* Cột nội dung: Cắt bớt nếu dài */
+.gmail-content {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+/* Snippet (nội dung tóm tắt): Màu nhạt hơn tiêu đề */
+.gmail-snippet {
+    font-weight: normal !important; /* Luôn ko đậm để phân biệt với tiêu đề */
+}
+
+/* Cột ngày tháng */
+.gmail-date {
+    width: 100px;
+    min-width: 100px;
+}
+/* Định dạng cột cuối cùng để không bị nhảy layout */
+.gmail-end-col {
+    width: 120px; /* Đặt chiều rộng cố định để ngày và thùng rác không làm lệch dòng */
+    min-width: 120px;
+    display: flex;
+    justify-content: flex-end; /* Căn phải */
+    align-items: center;
+}
+
+/* Mặc định: Ẩn hành động (thùng rác), Hiện ngày */
+.gmail-hover-actions {
+    display: none !important;
+}
+.gmail-date {
+    display: block !important;
+}
+
+/* KHI HOVER VÀO DÒNG (.gmail-row): */
+/* 1. Ẩn ngày */
+.gmail-row:hover .gmail-date {
+    display: none !important;
+}
+
+/* 2. Hiện thùng rác */
+.gmail-row:hover .gmail-hover-actions {
+    display: block !important;
+}

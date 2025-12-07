@@ -1,0 +1,81 @@
+<div class="contract-card-cover row justify-content-center mb-5">
+    <div class="search-bar-container">
+        <form action="/admin/hopdong" method="get" class="input-group search-box">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" 
+            name="searchHDT" value="{{search}}">
+            <button class="btn btn-main" type="submit">Tìm kiếm</button>
+        </form>
+        <button class="btn btn-main"
+            data-status="them"
+        onclick="ThemHopDong()">Thêm hợp đồng</button>
+    </div>
+    {{#if empty}}
+        <h3 class="text-center text-muted">Không có hợp đồng nào trong danh sách!</h3>
+    {{else}}
+    {{#each dshdt}}
+    <div class="col-11 col-md-9 col-lg-8 mb-4 d-flex justify-content-center">
+        
+        <div class="contract-card h-100">
+             <h2 class="main-title">Thông Tin Hợp Đồng</h2>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 col-12">
+                    <span class="sub-label d-inline">Ngày bắt đầu:</span>
+                    <span class="info-value fw-bold ms-2">{{this.NgayBD}}</span>
+                </div>
+                <div class="col-md-6 col-12">
+                    <span class="sub-label d-inline">Ngày kết thúc:</span>
+                    <span class="info-value fw-bold ms-2">{{this.NgayKT}}</span>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-6">
+                    <span class="sub-label">Người thuê:</span>
+                    {{#each this.dsND}}
+                    <div class="info-text">{{this.HoTen}}</div>
+                    {{/each}}
+                </div>
+                <div class="col-6">
+                    <span class="sub-label">Số điện thoại</span>
+                    {{#each this.dsND}}
+                    <div class="info-text">{{this.SDT}}</div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-6">
+                    <span class="sub-label">Thông tin phòng:</span>
+                </div>
+                <div class="col-6">
+                    <span class="sub-label">{{this.phong.[0].Ten}}</span>
+                </div>
+            </div>
+
+            <div class="row row-item">
+                <div class="col-6 info-text">Diện tích:</div>
+                <div class="col-6 info-value">{{this.phong.[0].DienTich}} m²</div>
+            </div>
+
+            <div class="row row-item">
+                <div class="col-6 info-text">Giá thuê:</div>
+                <div class="col-6 info-value">{{this.phong.[0].Gia}} VND</div>
+            </div>
+
+            <div class="row row-item">
+                <div class="col-6 info-text">Giá điện:</div>
+                <div class="col-6 info-value">{{this.giadien}} VND</div>
+            </div>
+
+            <div class="row row-item">
+                <div class="col-6 info-text">Giá nước:</div>
+                <div class="col-6 info-value">{{this.gianuoc}} VND</div>
+            </div>
+        </div>
+        
+    </div>
+    {{/each}}
+    {{/if}}
+</div>

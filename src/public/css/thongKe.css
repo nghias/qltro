@@ -1,0 +1,54 @@
+/* Tùy chỉnh Card */
+.custom-card {
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+    height: 100%;
+}
+
+.card-header {
+    color: white;
+    font-weight: bold;
+    font-size: 1.1rem;
+    border-top-left-radius: 8px !important;
+    border-top-right-radius: 8px !important;
+    padding: 10px 15px;
+}
+
+/* Màu sắc Header theo hình */
+.bg-cyan { background-color: #00acc1; }   /* Thông tin nhà trọ */
+.bg-purple { background-color: #7b1fa2; } /* Thống kê */
+.bg-lime { background-color: #c0ca33; color: white; } /* Khách thuê - chỉnh màu chữ trắng cho dễ nhìn */
+.bg-red { background-color: #d32f2f; }    /* Thanh toán */
+
+/* Box nhỏ trong phần Thông tin nhà trọ */
+.info-box {
+    color: white;
+    border-radius: 6px;
+    padding: 20px;
+    text-align: center;
+    height: 150px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+.info-box h2 { margin: 0; font-size: 3rem; font-weight: bold; }
+.info-box p { margin: 0; font-size: 1rem; margin-top: 5px; }
+
+.box-blue { background-color: #4db6ac; }
+.box-green { background-color: #66bb6a; }
+.box-red { background-color: #c62828; }
+
+/* Tùy chỉnh bảng/list */
+.custom-list .row {
+    padding: 8px 0;
+    border-bottom: 1px solid #eee;
+}
+.custom-list .row:last-child {
+    border-bottom: none;
+}
+.label-text { font-weight: 500; color: #555; }
+.value-text { font-weight: bold; color: #333; text-align: right; }

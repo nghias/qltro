@@ -1,0 +1,160 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Lấy tham số 'status' trên thanh địa chỉ
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
+        if (status) {
+            let title = '';
+            let type = 'success';
+            
+            switch (status) {
+                case 'them':
+                    title = 'Đã thêm thành công!';
+                    break;
+                
+                case 'sua':
+                    title = 'Đã sửa thành công!';
+                    break;
+
+                case 'xoa':
+                    title = 'Đã xóa thành công!';
+                    break;
+
+                case 'fail': 
+                    title = 'Không thành công';
+                    type = 'failure';;
+                    break;
+
+                default:
+                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
+                    // Không hiện popup, không làm gì cả
+                    return; 
+            }
+
+            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
+            showNotification(type, title,);
+
+            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
+            const newUrl = window.location.pathname;
+            window.history.replaceState(null, null, newUrl);
+        }
+    });
+</script>
+<div class="container my-5" style="margin-top: 60px !important;">
+
+    <div class="search-bar-container">
+        <form action="/admin/phuphi" method="get" class="input-group search-box">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchPP" value="{{search}}">
+            <button class="btn btn-main" type="submit">Tìm kiếm</button>
+        </form>
+        <button class="btn btn-main"
+            data-status="them"
+        onclick="ThemPhuPhi()">Thêm phụ phí</button>
+    </div>
+    {{#if empty}}
+        <h3 class="text-center text-muted">Không có phụ phí nào trong danh sách!</h3>
+    {{else}}
+    <div class="table-responsive">
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Tên phụ phí</th>
+                    <th>Giá</th>
+                    <th>Ghi Chú</th>
+                    <th>Chi tiết</th> 
+                </tr>
+            </thead>
+            <tbody>
+                {{#each dsPhuPhi}}
+                <tr>
+                    <td>{{this.TenPP}}</td>
+                    <td>{{this.Gia}}</td>
+                    <td>{{this.GhiChu}}</td>
+                    <td>
+                        <a class="link-detail" 
+                            onclick="SuaPhuPhi('{{this.MaPP}}')">
+                            Xem chi tiết
+                        </a>
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    {{/if}}
+</div>
+{{!-- Thêm --}}
+{{!-- Sửa --}}
+<div class="form-phuphi-cover form-cover z-3 fixed-top d-none justify-content-center" 
+onclick="closeForm('.form-phuphi-cover')">
+    <div class="p-3 rounded-2 w-auto position-relative" 
+    onclick="event.stopPropagation()" 
+    style=" background-color: #E8E8E8; min-width: 400px; height: fit-content;">
+        
+        {{!-- Nút đóng form --}}
+        <button class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder"
+         onclick="closeForm('.form-phuphi-cover')"></button>
+
+        <h3 class="form-phuphi-title text-center text-success mb-4">a</h3>
+
+        <form class="form-phuphi" action="/admin/phuphi" method="POST">
+            <input type="hidden" name="MaPP">
+            
+            <div class="mb-3">
+                <label class="form-label">Tên phụ phí</label>
+                <input type="text" name="TenPP" class="form-control" placeholder="Nhập tên phụ phí">
+                <small class="text-danger d-none" id="TenPPError">a</small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Giá </label>
+                <input type="text" name="GiaPP" class="form-control" placeholder="Nhập giá phụ phí">
+                <small class="text-danger d-none" id="GiaPPError">a</small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ghi chú </label>
+                <input type="text" name="GhiChuPP" class="form-control" placeholder="Nhập ghi chứ phụ phí">
+                <small class="text-danger d-none" id="GhiChuPPError">a</small>
+            </div>
+            <div class="mb-3 h-auto">
+                <label class="form-label">Chọn phòng cần áp dụng:</label>
+                <div class="containerPhuPhi row border p-2 rounded"
+                 style="height: 150px; overflow-y: scroll;"></div>
+                 <small class="text-danger d-none" id="PhongPPError">a</small>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-success px-4" name="btnLuuPP" value="1" type="submit">Lưu phụ phí</button>
+                {{!-- Xóa --}}
+                <button type="button"
+                class="btn btn-danger px-4 btnXoaPP" name="btnXoaPP" 
+                data-id=""
+                style="width: auto; margin-left: 10px;" 
+                onclick="XoaPhuPhi(this)">Xóa</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{!-- Xóa --}}
+<div class="form-phuphi-xn-cover form-cover z-3 fixed-top d-none justify-content-center align-items-center" 
+onclick="closeForm('.form-phuphi-xn-cover')">
+    <div class="p-3 rounded-2 w-auto h-auto position-relative" 
+    onclick="event.stopPropagation()" 
+    style="background-color: #E8E8E8; min-width: 400px; margin-top: 60px;">
+        {{!-- Nút đóng form --}}
+        <button 
+        class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder" 
+        onclick="closeForm('.form-phuphi-xn-cover')"></button>
+        <h3 class="form-phuphi-xn-title text-center text-success mb-4">Xóa Phụ Phí</h3>
+
+        <form class="form-phuphi-xn" action="" method="POST">
+            <div class="text-center">
+                <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
+                {{!-- Nút hủy xóa --}}
+                <button class="btn btn-delete px-4" style="width: auto; margin-left: 10px;" type="reset" 
+                onclick="closeForm('.form-phuphi-xn-cover')">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>

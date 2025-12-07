@@ -1,0 +1,224 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Lấy tham số 'status' trên thanh địa chỉ
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
+        if (status) {
+            let title = '';
+            let type = 'success';
+            
+            switch (status) {
+                case 'them':
+                    title = 'Đã thêm thành công!';
+                    break;
+                
+                case 'sua':
+                    title = 'Đã sửa thành công!';
+                    break;
+
+                case 'xoa':
+                    title = 'Đã xóa thành công!';
+                    break;
+                case 'kthdt':
+                    title = 'Đã kết thúc hợp đồng thành công!';
+                    break;
+                case 'sdtfail': 
+                    title = 'Số điện thoại bị trùng';
+                    type = 'failure';;
+                    break;
+
+                case 'cmndfail': 
+                    title = 'CMND bị trùng';
+                    type = 'failure';;
+                    break;
+                case 'fail': 
+                    title = 'Không thành công';
+                    type = 'failure';;
+                    break;
+
+                default:
+                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
+                    // Không hiện popup, không làm gì cả
+                    return; 
+            }
+
+            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
+            showNotification(type, title,);
+
+            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
+            const newUrl = window.location.pathname;
+            window.history.replaceState(null, null, newUrl);
+        }
+    });
+</script>
+<div class="contract-card-cover row justify-content-center mb-5">
+    <div class="search-bar-container">
+        <form action="/admin/hopdong" method="get" class="input-group search-box">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" 
+            name="searchHDT" value="{{search}}">
+            <button class="btn btn-main" type="submit">Tìm kiếm</button>
+        </form>
+        <button class="btn btn-main"
+            data-status="them"
+        onclick="ThemHopDong()">Thêm hợp đồng</button>
+    </div>
+    {{#if empty}}
+        <h3 class="text-center text-muted">Không có hợp đồng nào trong danh sách!</h3>
+    {{else}}
+    {{#each dshdt}}
+    <div class="col-11 col-md-9 col-lg-8 mb-4 d-flex justify-content-center">
+        
+        <div class="contract-card h-100">
+             <h2 class="main-title">Thông Tin Hợp Đồng</h2>
+            
+            <div class="row mb-4">
+                <div class="col-md-6 col-12">
+                    <span class="sub-label d-inline">Ngày bắt đầu:</span>
+                    <span class="info-value fw-bold ms-2">{{this.NgayBD}}</span>
+                </div>
+                <div class="col-md-6 col-12">
+                    <span class="sub-label d-inline">Ngày kết thúc:</span>
+                    <span class="info-value fw-bold ms-2">{{this.NgayKT}}</span>
+                </div>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-6">
+                    <span class="sub-label">Người thuê:</span>
+                    {{#each this.dsND}}
+                    <div class="info-text">{{this.HoTen}}</div>
+                    {{/each}}
+                </div>
+                <div class="col-6">
+                    <span class="sub-label">Số điện thoại</span>
+                    {{#each this.dsND}}
+                    <div class="info-text">{{this.SDT}}</div>
+                    {{/each}}
+                </div>
+            </div>
+
+            <div class="row mb-2">
+                <div class="col-6">
+                    <span class="sub-label">Thông tin phòng:</span>
+                </div>
+                <div class="col-6">
+                    <span class="sub-label">{{this.phong.[0].Ten}}</span>
+                </div>
+            </div>
+
+            <div class="row row-item">
+                <div class="col-6 info-text">Diện tích:</div>
+                <div class="col-6 info-value">{{this.phong.[0].DienTich}} m²</div>
+            </div>
+
+            <div class="row row-item">
+                <div class="col-6 info-text">Giá thuê:</div>
+                <div class="col-6 info-value">{{this.phong.[0].Gia}} VND</div>
+            </div>
+
+            <div class="row row-item">
+                <div class="col-6 info-text">Giá điện:</div>
+                <div class="col-6 info-value">{{this.giadien}} VND</div>
+            </div>
+
+            <div class="row row-item">
+                <div class="col-6 info-text">Giá nước:</div>
+                <div class="col-6 info-value">{{this.gianuoc}} VND</div>
+            </div>
+            {{#if this.trangthai}}
+            <div class="w-100 text-center">
+                <button class="btn btn-success px-4" name="btnSuaHDT" type="submit"
+                onclick="SuaHopDong('{{this.MaHDT}}')"
+                >Sửa hợp đồng</button>
+                <button class="btn btn-delete px-4 w-auto" name="btnKTHDT"
+                onclick="KTHopDong('{{this.MaHDT}}')"
+                type="submit">Kết thúc hợp đồng</button>
+            </div>
+            {{else}}
+            <div class="w-100 text-center">
+                <button class="btn btn-success px-4" name="btnXoaHDT" value="1" type="submit"
+                onclick="XoaHopDong('{{this.MaHDT}}')">Xóa hợp đồng</button>
+            </div>
+            {{/if}}
+        </div>
+        
+    </div>
+    {{/each}}
+    {{/if}}
+</div>
+{{!-- Thêm --}}
+{{!-- Sửa --}}
+<div class="form-hdt-cover form-cover z-3 fixed-top d-none justify-content-center h-100" 
+style="overflow-y: auto;"
+onclick="closeForm('.form-hdt-cover')">
+    <div class="p-3 rounded-2 position-relative" 
+    onclick="event.stopPropagation()" 
+    style=" background-color: #E8E8E8; max-width: 400px; height: fit-content; margin-bottom: 60px;">
+        
+        {{!-- Nút đóng form --}}
+        <button class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder"
+         onclick="closeForm('.form-hdt-cover')"></button>
+
+        <h3 class="form-hdt-title text-center text-success mb-4">a</h3>
+
+        <form class="form-hdt" action="/admin/hopdong" method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Phòng:</label>
+                <select class="form-select PhongHDT" name="PhongHDT">
+                    <option value="">Chọn phòng</option>
+                </select>
+                <small class="text-danger d-none" id="PhongHDTError"></small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ngày bắt đầu:</label>
+                <input type="date" name="NgayBD" class="form-control" placeholder="Chọn ngày">
+                <small class="text-danger d-none" id="NgayBDError"></small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ngày kết thúc:</label>
+                <input type="date" name="NgayKT" class="form-control" placeholder="Chọn ngày">
+                <small class="text-danger d-none" id="NgayKTError"></small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tiền cọc:</label>
+                <input type="text" name="TienCoc" class="form-control" placeholder="Nhập tiền cọc">
+                <small class="text-danger d-none" id="TienCocError">a</small>
+            </div>
+            <div class="mb-3 h-auto">
+                <label class="form-label">Chọn người thuê:</label>
+                <div class="containerNguoiThue row border p-2 rounded"
+                 style="height: 150px; overflow-y: scroll;"></div>
+                 <small class="text-danger d-none" id="NThueError">a</small>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-success px-4" name="btnLuuHDT" value="1" type="submit">Tạo hợp đồng</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{!-- Xóa --}}
+<div class="form-hopdong-xn-cover form-cover z-3 fixed-top d-none justify-content-center align-items-center" 
+onclick="closeForm('.form-hopdong-xn-cover')">
+    <div class="p-3 rounded-2 w-auto h-auto position-relative" 
+    onclick="event.stopPropagation()" 
+    style="background-color: #E8E8E8; min-width: 400px; margin-top: 60px;">
+        {{!-- Nút đóng form --}}
+        <button 
+        class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder" 
+        onclick="closeForm('.form-hopdong-xn-cover')"></button>
+        <h3 class="form-hopdong-xn-title text-center text-success mb-4"> </h3>
+
+        <form class="form-hopdong-xn" action="" method="POST">
+            <div class="text-center">
+                <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
+                {{!-- Nút hủy xóa --}}
+                <button class="btn btn-delete px-4" style="width: auto; margin-left: 10px;" type="reset" 
+                onclick="closeForm('.form-hopdong-xn-cover')">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>

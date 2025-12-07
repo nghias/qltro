@@ -1,0 +1,205 @@
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Lấy tham số 'status' trên thanh địa chỉ
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
+        if (status) {
+            let title = '';
+            let type = 'success'; // Mặc định là màu xanh
+
+            // 3. Phân loại 3 trường hợp cụ thể
+            switch (status) {
+                case 'them':
+                    title = 'Đã thêm thành công!';
+                    break;
+                
+                case 'sua':
+                    title = 'Đã sửa thành công!';
+                    break;
+
+                case 'xoa':
+                    title = 'Đã xóa thành công!';
+                    break;
+
+                case 'error': // (Tùy chọn) Nếu muốn báo lỗi
+                    title = 'Lỗi';
+                    type = 'failure';;
+                    break;
+
+                default:
+                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
+                    // Không hiện popup, không làm gì cả
+                    return; 
+            }
+
+            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
+            showNotification(type, title,);
+
+            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
+            const newUrl = window.location.pathname;
+            window.history.replaceState(null, null, newUrl);
+        }
+    });
+</script>
+
+{{!-- Hiển thị thị --}}
+<div class="container mt-4 mb-5" style="margin-top: 60px !important;">
+
+    <!-- Thanh tìm kiếm -->
+    <div class="d-flex gap-3 mb-4 justify-content-center">
+        <form action="/admin/phongtro" method="get" class="input-group search-box">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="search" value="{{search}}">
+            <button class="btn btn-main" type="submit">Tìm kiếm</button>
+        </form>
+
+        <button class="btn btn-main" 
+            data-status="them"
+        onclick="ThemPhongTro()">Thêm phòng</button>
+    </div>
+    {{#if empty}}
+        <h3 class="text-center text-muted">Không có phòng nào trong danh sách!</h3>
+    {{else}}
+        {{#each dsPhong}}
+            <div class="card card-room mb-4">
+                <div class="card-header room-header">{{this.Ten}}</div>
+
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-4" style="height: 400px; overflow: hidden;">
+                            <img src="/img/{{this.HinhAnh}}" 
+                                class="img-room" 
+                            style="width: 100%; height: 100%;">
+                        </div>
+
+                        <div class="col-md-5 p-3">
+                            <h5 class="title-info h1">Thông tin phòng</h5>
+                            <p class="h2">Diện tích: {{this.DienTich}}m²</p>
+                            <p class="h2">Giá: {{this.Gia}} VND</p>
+                        </div>
+                        {{#if this.isRented}}
+                        <div class="col-md-3 room-right">
+                            <p class="status text-muted"><span class="text-danger h4 mb-0">●</span> Đang cho thuê</p>
+                        </div>
+                        {{else}}
+                        <div class="col-md-3 room-right">
+                            <p class="status text-muted"><span class="text-success h4 mb-0">●</span> Trống</p>
+
+                            <button class="btn btn-edit" 
+                            onclick="SuaPhongTro('{{this.MaPhong}}')">Sửa</button>
+                            <button class="btn btn-delete" 
+                            onclick="XoaPhongTro('{{this.MaPhong}}', '{{this.HinhAnh}}')">Xóa</button>
+                        </div>
+                        {{/if}}
+                    </div>
+                </div>
+            </div>
+        {{/each}}
+    {{/if}}
+</div>
+{{!-- Thêm --}}
+{{!-- Sửa --}}
+<div class="form-phong-cover form-cover z-3 fixed-top d-none justify-content-center" 
+onclick="closeForm('.form-phong-cover')">
+    <div class="p-3 rounded-2 w-auto position-relative" 
+    onclick="event.stopPropagation()" 
+    style="background-color: #E8E8E8; min-width: 400px; height: fit-content;">
+        
+        {{!-- Nút đóng form --}}
+        <button class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder"
+         onclick="closeForm('.form-phong-cover')"></button>
+
+        <h3 class="form-phong-title text-center text-success mb-4">Sửa Phòng</h3>
+
+        <form class="form-phong" action="/admin/phongtro" method="POST" enctype="multipart/form-data">
+            <input type="hidden" name="HinhCu">
+
+            <div class="mb-3">
+                <label class="form-label">Tên phòng:</label>
+                <input type="text" name="TenPhong" class="form-control" 
+                    placeholder="Nhập tên phòng"
+                    oninput="document.querySelector('.TenPhongTest').innerText = this.value"
+                >
+                <small class="text-danger d-none" id="tenPhongError">Tên phòng không được để trống</small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Diện tích phòng:</label>
+                <input type="text" name="DienTich" class="form-control" 
+                    placeholder="Nhập diện tích"
+                    oninput="document.querySelector('.DienTichTest').innerText = this.value"
+                >
+                <small class="text-danger d-none" id="dienTichError">Diện tích là số và không được để trống</small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Giá phòng:</label>
+                <input type="text" name="Gia" class="form-control" 
+                    placeholder="Nhập giá"
+                    oninput="document.querySelector('.GiaTest').innerText = this.value"
+                >
+                <small class="text-danger d-none" id="giaPhongError">Giá phòng là số và không được để trống</small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Ảnh phòng:</label>
+                <input type="file" name="Hinh" class="form-control" 
+                    placeholder="Chọn ảnh"
+                    onchange="xemThuAnh(this,'.AnhPhongTest')"
+                >
+                <small class="text-danger d-none" id="anhPhongError">Hãy chọn 1 ảnh</small>
+            </div>
+
+            <div class="card card-room mb-3">
+                <div class="TenPhongTest card-header room-header"></div>
+
+                <div class="card-body p-0">
+                    <div class="row g-0">
+                        <div class="col-md-4" style="height: 200px; overflow: hidden;">
+                            <img src="/img/logo.png" 
+                                class="img-room AnhPhongTest" 
+                            style="width: 100%; height: 100%;">
+                        </div>
+                        <div class="col-md-5 p-3">
+                            <h5 class="title-info h3">Thông tin phòng</h5>
+                            <p class="h4  d-inline">Diện tích: <p class="DienTichTest h4  d-inline"></p><p class="h4 d-inline">m²</p></p>
+                            <p class="h4  d-inline">Giá: <p class="GiaTest h4  d-inline"></p><p class="h4 d-inline">VND</p></p>
+                        </div>
+                        <div class="col-md-3 room-right">
+                            <p class="status text-muted"><span class="text-success h5 mb-0">●</span> Trống</p>
+
+                            <button type="button" class="btn btn-edit">Sửa</button>
+                            <button type="button" class="btn btn-delete">Xóa</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center">
+                <button class="btn btn-success px-4" name="btnLuuPhong" value="1" type="submit">Lưu Phòng</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{!-- Xóa --}}
+<div class="form-phong-xoa-cover form-cover z-3 fixed-top d-none justify-content-center align-items-center" 
+onclick="closeForm('.form-phong-xoa-cover')">
+    <div class="p-3 rounded-2 w-auto h-auto position-relative" 
+    onclick="event.stopPropagation()" 
+    style="background-color: #E8E8E8; min-width: 400px; margin-top: 60px;">
+        {{!-- Nút đóng form --}}
+        <button class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder" 
+        onclick="closeForm('.form-phong-xoa-cover')"></button>
+        <h3 class="text-center text-success mb-4">Xóa Phòng</h3>
+
+        <form class="form-phong-xoa" action="/admin/phongtro" method="POST">
+            <input type="hidden" name="HinhXoa">
+            <div class="text-center">
+                <button class="btn-xoa btn btn-success px-4" type="submit">Đồng ý</button>
+                {{!-- Nút hủy xóa --}}
+                <button class="btn btn-delete px-4" style="width: auto; margin-left: 10px;" type="reset"
+                 onclick="closeForm('.form-phong-xoa-cover')">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,261 @@
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // 1. Lấy tham số 'status' trên thanh địa chỉ
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
+        if (status) {
+            let title = '';
+            let type = 'success';
+            
+            switch (status) {
+                case 'them':
+                    title = 'Đã thêm thành công!';
+                    break;
+                case 'themgia':
+                    title = 'Đã cập nhật giá thành công!';
+                    break;
+                
+                case 'sua':
+                    title = 'Đã sửa thành công!';
+                    break;
+
+                case 'xoa':
+                    title = 'Đã xóa thành công!';
+                    break;
+
+                case 'fail': 
+                    title = 'Không thành công';
+                    type = 'failure';;
+                    break;
+
+                case 'failthem': 
+                    title = 'Bạn đã tạo chỉ số cho tháng này rồi';
+                    type = 'failure';;
+                    break;
+
+                default:
+                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
+                    // Không hiện popup, không làm gì cả
+                    return; 
+            }
+
+            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
+            showNotification(type, title,);
+
+            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
+            const newUrl = window.location.pathname;
+            window.history.replaceState(null, null, newUrl);
+        }
+    });
+</script>
+<div class="contract-card-cover row justify-content-center mb-5">
+    <div class="search-bar-container mb-2">
+        <form action="/admin/dienuoc/capnhatgia" method="POST" class="d-flex align-items-center gap-2 price-update-group">
+            <label class="fw-bold text-teal mb-0">Giá điện:</label>
+            <input type="number" name="giaDien" class="form-control text-center w-auto" 
+                value="{{giadn.GiaDien}}">
+
+            <label class="fw-bold text-teal mb-0 ms-2">Giá nước:</label>
+            <input type="number" name="giaNuoc" class="form-control text-center w-auto" 
+                value="{{giadn.GiaNuoc}}">
+
+            <button type="submit" class="btn btn-main rounded-pill px-3 ms-2">Áp dụng</button>
+        </form>
+    </div>
+    <div class="search-bar-container">
+        <form action="/admin/diennuoc" method="get" class="input-group search-box">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchDN" value="{{search}}">
+            <button class="btn btn-main" type="submit">Tìm kiếm</button>
+        </form>
+        <button class="btn btn-main"
+            data-status="them"
+        onclick="moFormGhiDienNuoc()">Thêm chỉ số mới</button>
+    </div>
+    {{#if empty}}
+        <h3 class="text-center text-muted">Không có chỉ số nào trong danh sách!</h3>
+    {{else}}
+    <div class="table-responsive">
+        <table class="table table-bordered container">
+            <thead>
+                <tr>
+                    <th rowspan="2" class="w-auto">Phòng</th>
+                    <th colspan="3" class="w-auto">Chỉ số điện</th>
+                    <th colspan="3" class="w-auto">Chỉ số nước</th>
+                    <th rowspan="2" class="w-auto">Ngày ghi</th> 
+                    <th rowspan="2" class="w-auto"></th>
+                </tr>
+                <tr>
+                    <th>Củ</th>
+                    <th>Mới</th>
+                    <th>Đơn vị</th>
+                    <th>Củ</th>
+                    <th>Mới</th>
+                    <th>Đơn vị</th>
+                </tr>
+            </thead>
+            <tbody>
+                {{#each dsdn}}
+                <tr>
+                    <td>{{this.TenPhong}}</td>
+                    <td>{{this.SoDCu}}</td>
+                    <td>{{this.SoDMoi}}</td>
+                    <td>kWh</td>
+                    <td>{{this.SoNCu}}</td>
+                    <td>{{this.SoNMoi}}</td>
+                    <td>m³</td>
+                    <td>{{this.NgayGhi}}</td>
+                    <td>
+                        {{#if this.isSua}}
+                        <button class="btn btn-success px-4" onclick="SuaCSDN({{this.MaCS}})">Sửa</button>
+                        <button class="btn btn-delete px-4 w-auto" onclick="XoaCSDN({{this.MaCS}})">Xóa</button>
+                        {{/if}}
+                        {{#if this.isXoa}}
+                        <button class="btn btn-delete px-4 w-auto" onclick="XoaCSDN({{this.MaCS}})">Xóa</button>
+                        {{/if}}
+                    </td>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+    {{/if}}
+</div>
+{{!-- Form Thêm --}}
+<div id="modalDienNuoc" class="position-fixed top-0 start-0 w-100 h-100 d-none justify-content-center align-items-center" 
+     style="background: rgba(0,0,0,0.5); z-index: 1050;">
+    
+    <div class="card shadow" style="width: 600px; max-width: 90%;">
+        
+        <div class="card-header bg-success text-white d-flex justify-content-between align-items-center">
+            <h5 class="mb-0">Ghi chỉ số Điện Nước</h5>
+            <button type="button" class="btn-close btn-close-white" onclick="dongFormGhiDienNuoc()"></button>
+        </div>
+        
+        <div class="card-body">
+            {{#if isPhongRong}}
+            <div class="text-center">
+                <h3 class="text-center text-muted">Không có phòng cần thêm chỉ số trong tháng này</h3>
+                <div class="w-100 d-flex justify-content-center">
+                    <button type="submit" class="btn btn-success d-block" id="btnSubmit"
+                    onclick="dongFormGhiDienNuoc()">
+                        <i class="fa-solid fa-exit"></i> Thoát
+                    </button>
+                </div>
+            </div>
+            {{else}}
+            <form action="/admin/diennuoc" method="POST" id="formWizard">
+                
+                <input type="hidden" name="dataJson" id="dataJsonHidden">
+
+                <div id="slidesContainer">
+                    {{#each listPhong}}
+                    <div class="step-slide {{#if @first}}{{else}}d-none{{/if}}" data-index="{{@index}}">
+                        
+                        <h4 class="text-success text-center mb-3">Phòng: {{this.Ten}}</h4>
+                        
+                        <input type="hidden" class="inp-maphong" value="{{this.MaPhong}}">
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Chỉ số Điện mới:</label>
+                                <input type="number" class="form-control inp-dien" placeholder="Nhập số điện..." required>
+                                <small class="text-danger d-none CSDienError" id="CSDienError">a</small>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label fw-bold">Chỉ số Nước mới:</label>
+                                <input type="number" class="form-control inp-nuoc" placeholder="Nhập số nước..." required>
+                                <small class="text-danger d-none CSNuocError" id="CSNuocError">a</small>
+                            </div>
+                        </div>
+                    </div>
+                    {{/each}}
+                </div>
+
+                <div class="d-flex justify-content-between mt-4 border-top pt-3">
+                    <button type="button" class="btn btn-delete mx-2 w-auto" id="btnPrev" disabled>
+                        <i class="fa-solid fa-arrow-left"></i> Quay lại
+                    </button>
+                    
+                    <button type="button" class="btn btn-delete mx-2 w-auto" id="btnNext">
+                        Tiếp theo <i class="fa-solid fa-arrow-right"></i>
+                    </button>
+
+                    <button type="submit" class="btn btn-success d-none" id="btnSubmit">
+                        <i class="fa-solid fa-save"></i> Lưu tất cả
+                    </button>
+                </div>
+            </form>
+            {{/if}}
+        </div>
+    </div>
+</div>
+{{!-- Sửa --}}
+<div class="form-csdn-cover form-cover z-3 fixed-top d-none justify-content-center" 
+onclick="closeForm('.form-csdn-cover')">
+    <div class="p-3 rounded-2 w-auto position-relative" 
+    onclick="event.stopPropagation()" 
+    style=" background-color: #E8E8E8; min-width: 400px; height: fit-content;">
+        
+        {{!-- Nút đóng form --}}
+        <button class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder"
+         onclick="closeForm('.form-csdn-cover')"></button>
+
+        <h3 class="form-csdn-title text-center text-success mb-4">a</h3>
+
+        <form class="form-csdn" action="/admin/diennuoc" method="POST">
+            <div class="mb-3">
+                <label class="form-label">Chỉ số điện củ </label>
+                <input type="text" name="CSDC" class="form-control" readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Chỉ số nước củ </label>
+                <input type="text" name="CSNC" class="form-control" readonly>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Chỉ số điện mới </label>
+                <input type="text" name="CSDM" class="form-control" placeholder="Nhập chỉ số điện">
+                <small class="text-danger d-none" id="CSDMError">a</small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Chỉ số nước mới </label>
+                <input type="text" name="CSNM" class="form-control" placeholder="Nhập chỉ số nước">
+                <small class="text-danger d-none" id="CSNMError">a</small>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-success px-4" name="btnLuuCS" value="1" type="submit">Lưu chỉ số</button>
+                {{!-- Xóa --}}
+                <button type="button"
+                class="btn btn-danger px-4 btnXoaPP" name="btnXoaPP" 
+                data-id=""
+                style="width: auto; margin-left: 10px;" 
+                onclick="XoaPhuPhi(this)">Xóa</button>
+            </div>
+        </form>
+    </div>
+</div>
+{{!-- Xóa --}}
+<div class="form-csdn-xn-cover form-cover z-3 fixed-top d-none justify-content-center align-items-center" 
+onclick="closeForm('.form-csdn-xn-cover')">
+    <div class="p-3 rounded-2 w-auto h-auto position-relative" 
+    onclick="event.stopPropagation()" 
+    style="background-color: #E8E8E8; min-width: 400px; margin-top: 60px;">
+        {{!-- Nút đóng form --}}
+        <button 
+        class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder" 
+        onclick="closeForm('.form-csdn-xn-cover')"></button>
+        <h3 class="form-csdn-xn-title text-center text-success mb-4">Xóa Phụ Phí</h3>
+
+        <form class="form-csdn-xn" action="" method="POST">
+            <div class="text-center">
+                <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
+                {{!-- Nút hủy xóa --}}
+                <button class="btn btn-delete px-4" style="width: auto; margin-left: 10px;" type="reset" 
+                onclick="closeForm('.form-csdn-xn-cover')">Hủy</button>
+            </div>
+        </form>
+    </div>
+</div>

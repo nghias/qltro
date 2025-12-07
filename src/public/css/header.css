@@ -1,0 +1,146 @@
+:root {
+    --main-green: #00cba9; 
+    --bg-gray: #e9ecef;
+    --text-gray: #757575;
+}
+.nav-link {
+    width: fit-content; /* Chiều rộng vừa khít nội dung */
+    width: -moz-fit-content; /* Hỗ trợ trình duyệt Firefox cũ */
+}
+.search-box {
+    width: 45%;
+}
+.dropdowninfo:hover .dropdown-menu {
+    display: block;
+}
+
+.dropdown-menu::before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -20px;  
+    left: 0;
+    width: 100%;
+    height: 20px; 
+    background-color: transparent; 
+}
+
+.dropdown-menu {
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+/* Thông báo */
+.notification-icon {
+    font-size: 20px;
+    color: black;
+    cursor: pointer;
+    position: relative;
+}
+
+/* Số lượng thông báo (Badge đỏ) */
+.notification-badge {
+    position: absolute;
+    top: -5px;
+    right: -10px;
+    background-color: red;
+    color: white;
+    font-size: 8px;
+    font-weight: bold;
+    padding: 2px 4px;
+    border-radius: 50%;
+    border: 2px solid white;
+}
+
+/* Khung chứa danh sách thông báo (Dropdown menu) */
+.custom-dropdown-menu {
+    width: 320px;
+    padding: 0;
+    border: 1px solid var(--main-green); /* Viền xanh */
+    border-radius: 12px;
+    margin-top: 15px !important; /* Đẩy xuống một chút để chừa chỗ cho mũi tên */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+.custom-dropdown-menu::before {
+    content: "";
+    position: absolute;
+    
+    width: 100%; 
+    height: 12px; 
+    
+    background-color: var(--main-green); 
+    
+    top: 0px;
+    right: 20px;
+    
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    
+    z-index: 1000;
+}
+.custom-dropdown-menu::after {
+    content: "";
+    position: absolute;
+    top: -10px;
+    right: 190px; 
+    border-width: 0 11px 11px 11px;
+    border-style: solid;
+    border-color: transparent transparent var(--main-green) transparent; 
+    z-index: 1001;
+}
+
+/* Header "Thông Báo" */
+.notify-header {
+    background-color: var(--bg-gray);
+    color: var(--main-green);
+    font-weight: bold;
+    font-size: 18px;
+    text-align: center;
+    padding: 24px 12px 12px;
+    border-bottom: 1px solid var(--main-green);
+    border-top-left-radius: 11px;
+    border-top-right-radius: 11px;
+}
+
+/* Các dòng thông báo (Item) */
+.notify-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--main-green);
+    background-color: #e6e6e6; /* Màu nền xám nhạt giống ảnh */
+    color: var(--text-gray);
+    font-weight: bold;
+    display: block;
+    text-decoration: none;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis; /* Hiện dấu ... nếu dài quá */
+    transition: background 0.2s;
+}
+
+.notify-item:hover {
+    background-color: #dcdcdc; /* Hiệu ứng hover */
+}
+
+/* Dòng thông báo đặc biệt (Màu xanh lá) */
+.notify-item.highlight {
+    color: #28a745; /* Màu xanh lá đậm hơn */
+    background-color: #e9ecef;
+}
+
+/* Footer "Hiện thêm thông báo" */
+.notify-footer {
+    text-align: center;
+    padding: 12px;
+    color: var(--main-green);
+    font-weight: bold;
+    background-color: #e6e6e6;
+    border-bottom-left-radius: 11px;
+    border-bottom-right-radius: 11px;
+    cursor: pointer;
+    display: block;
+    text-decoration: none;
+}

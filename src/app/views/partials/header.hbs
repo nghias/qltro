@@ -1,0 +1,492 @@
+<nav class="navbar navbar-expand-lg bg-body-tertiary tro-color p-0 fixed-top">
+  <div class="container-fluid">
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <a class="navbar-brand p-0" href="/{{role}}">
+      <img src="/img/logo.png" alt="" srcset="" height="50" width="50" />
+      <b>Xóm trọ</b>
+    </a>
+
+    {{!-- SM Thông báo --}}
+    <div class="d-flex d-lg-none align-items-center">
+      {{!-- Thông báo --}}
+      <div class="dropdownnotifycate me-3 ">
+        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="notification-icon">
+                <i class="fa-regular fa-bell"></i> <span class="notification-badge">9+</span>
+            </div>
+        </a>
+
+        <div class="dropdown-menu custom-dropdown-menu dropdown-menu-end">
+            <div>
+                <div class="notify-header">Thông Báo</div>
+            </div>
+
+            <ul class="text-decoration-none list-unstyled m-0 notify-list">
+              {{!-- <li><a class="notify-item" href="#">Thông báo sự cố điện....</a></li>
+              <li><a class="notify-item" href="#">Thông báo sự cố điện....</a></li>
+              <li><a class="notify-item" href="#">Thông báo tiền phòng....</a></li>
+              
+              <li><a class="notify-item highlight" href="#">Thông báo thay đổi tiền rác....</a></li>
+              
+              <li><a class="notify-item" href="#">Thông báo sự cố điện....</a></li> --}}
+            </ul>
+
+            <div>
+                <a class="notify-footer" href="/{{role}}/thongbao/{{info.MaND}}">Hiện thêm thông báo</a>
+            </div>
+        </div>
+     </div>
+      {{!-- Người dùng --}}
+      <div class="dropdowninfo d-none d-sm-block">
+        <a
+          class="d-flex text-decoration-none pe-0 align-items-center cursor-pointer"
+          href="#"
+          role="button"
+          data-bs-toggle=""
+          aria-expanded="false"
+        >
+
+          <div class="me-2">
+            <b class="text-end text-primary h6 d-block mb-0">{{info.HoTen}}</b>
+            {{#if (eq role "admin")}}
+              <p class="text-end text-dark m-0 h6">Chủ trọ</p>
+            {{else}}
+              <p class="text-end text-dark m-0 h6">Người thuê</p>
+            {{/if}}
+          </div>
+          <div>
+            <img
+              class="rounded-circle border"
+              src="/img/{{info.AVT}}"
+              alt="Avt"
+              width="40"
+              height="40"
+              style="object-fit: cover; object-position: center;"
+            />
+          </div>
+
+        </a>
+
+        <ul
+          class="dropdown-menu dropdown-menu-end mt-3 shadow border-0 me-5"
+          style="background-color: #E8E8E8; min-width: 170px;"
+        >
+
+          <div
+            class="position-absolute top-0 end-0 translate-middle-y me-1"
+            style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #E8E8E8;"
+          >
+          </div>
+
+          <li>
+            <a
+              class="dropdown-item fw-bold text-success py-2"
+              href="javascript:void(0)"
+              onclick="CapNhatThongTin('{{info.MaND}}', '{{role}}')"
+            >
+              <i class="bi bi-gear-fill me-2"></i>
+              Thông tin
+            </a>
+          </li>
+
+          <li>
+            <a
+              class="dropdown-item fw-bold text-warning text-warning py-2"
+              onclick="openForm('.form-doimk-cover')"
+            >
+              <i class="fa-solid fa-rotate me-2"></i>
+              Đổi mật khẩu
+            </a>
+          </li>
+
+          <li>
+            <a class="dropdown-item fw-bold text-danger py-2" href="/">
+              <i class="bi bi-box-arrow-right me-2"></i>
+              Đăng xuất
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    {{!-- Menu --}}
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      {{!-- Người dùng --}}
+      <div class="dropdowninfo d-flex d-sm-none">
+        <a
+          class="d-flex text-decoration-none pe-0 align-items-center cursor-pointer"
+          href="#"
+          role="button"
+          data-bs-toggle=""
+          aria-expanded="false"
+        >
+
+          <div>
+            <img
+              class="rounded-circle border"
+              src="/img/{{info.AVT}}"
+              alt="Avt"
+              width="40"
+              height="40"
+              style="object-fit: cover; object-position: center;"
+            />
+          </div>
+          <div class="ms-2">
+            <b class="text-start text-primary h6 d-block mb-0">{{info.HoTen}}</b>
+            {{#if (eq role "admin")}}
+              <p class="text-start text-dark m-0 h6">Chủ trọ</p>
+            {{else}}
+              <p class="text-start text-dark m-0 h6">Người thuê</p>
+            {{/if}}
+          </div>
+
+        </a>
+
+        <ul
+          class="dropdown-menu dropdown-menu-end mt-3 shadow border-0 me-5"
+          style="background-color: #E8E8E8; min-width: 170px;"
+        >
+
+          <div
+            class="position-absolute top-0 end-0 translate-middle-y me-1"
+            style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #E8E8E8;"
+          >
+          </div>
+
+          <li>
+            <a
+              class="dropdown-item fw-bold text-success py-2"
+              href="javascript:void(0)"
+              onclick="CapNhatThongTin('{{info.MaND}}', '{{role}}')"
+            >
+              <i class="bi bi-gear-fill me-2"></i>
+              Thông tin
+            </a>
+          </li>
+
+          <li>
+            <a
+              class="dropdown-item fw-bold text-warning text-warning py-2"
+              onclick="openForm('.form-doimk-cover')"
+            >
+              <i class="fa-solid fa-rotate me-2"></i>
+              Đổi mật khẩu
+            </a>
+          </li>
+
+          <li>
+            <a class="dropdown-item fw-bold text-danger py-2" href="/">
+              <i class="bi bi-box-arrow-right me-2"></i>
+              Đăng xuất
+            </a>
+          </li>
+        </ul>
+      </div>
+      {{! MENU USER }}
+      {{#if (eq role "user")}}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 mt-lg-0 mt-2">
+          <li class="nav-item">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/user/"
+            ><b>Hóa Đơn</b></a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/user/hopdong"
+            ><b>Hợp Đồng</b></a>
+          </li>
+          <li class="nav-item">
+            <a class="header nav-link active" 
+            aria-current="page" 
+            href="/{{role}}/thongbao/{{info.MaND}}"><b
+              >Thông Báo</b></a>
+          </li>
+        </ul>
+      {{/if}}
+      {{! MENU ADMIN }}
+      {{#if (eq role "admin")}}
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0 mt-lg-0 mt-2">
+          <li class="nav-item">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/admin/"
+            ><b class="">Thống Kê</b></a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/admin/phongtro"
+            ><b class="">Phòng Trọ</b></a>
+          </li>
+          <li class="nav-item">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/admin/nguoidung"
+            ><b class="">Người Dùng</b></a>
+          </li>
+          {{!-- Khác --}}
+          <div class="dropdown d-xl-none d-lg-block d-none">
+            <a class="header nav-link active" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <b>Khác</b>
+            </a>
+            <ul class="dropdown-menu">
+              <li class="nav-item ">
+                  <a
+                    class="header nav-link active"
+                    aria-current="page"
+                    href="/admin/hopdong"
+                  ><b>Hợp đồng thuê</b></a>
+                </li>
+                <li class="nav-item ">
+                  <a
+                    class="header nav-link active"
+                    aria-current="page"
+                    href="/admin/diennuoc"
+                  ><b>Điện nước</b></a>
+                </li>
+                <li class="nav-item ">
+                  <a
+                    class="header nav-link active"
+                    aria-current="page"
+                    href="/admin/phuphi"
+                  ><b>Phụ phí</b></a>
+                </li>
+                <li class="nav-item ">
+                  <a
+                    class="header nav-link active"
+                    aria-current="page"
+                    href="/admin/hoadon"
+                  ><b>Hóa đơn</b></a>
+                </li>
+            </ul>
+          </div>
+          
+          <li class="nav-item d-lg-none d-xl-flex">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/admin/hopdong"
+            ><b class="">Hợp đồng thuê</b></a>
+          </li>
+          <li class="nav-item d-lg-none d-xl-flex">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/admin/diennuoc"
+            ><b class="">Điện nước</b></a>
+          </li>
+          <li class="nav-item d-lg-none d-xl-flex">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/admin/phuphi"
+            ><b class="">Phụ phí</b></a>
+          </li>
+          <li class="nav-item d-lg-none d-xl-flex">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/admin/hoadon"
+            ><b class="">Hóa đơn</b></a>
+          </li>
+          <li class="nav-item d-none">
+            <a
+              class="header nav-link active"
+              aria-current="page"
+              href="/admin/thongbao"
+            ><b class="">Hóa đơn</b></a>
+          </li>
+        </ul>
+      {{/if}}
+    </div>
+    {{!-- SM Thông báo --}}
+    <div class="d-lg-flex d-none align-items-center">
+      {{!-- Thông báo --}}
+      <div class="dropdownnotifycate me-3 ">
+        <a href="#" class="text-decoration-none" data-bs-toggle="dropdown" aria-expanded="false">
+            <div class="notification-icon">
+                <i class="fa-regular fa-bell"></i> <span class="notification-badge d-none">0</span>
+            </div>
+        </a>
+
+        <div class="dropdown-menu custom-dropdown-menu dropdown-menu-end">
+            <div>
+                <div class="notify-header">Thông Báo</div>
+            </div>
+
+            <ul class="text-decoration-none list-unstyled m-0 notify-list">
+              {{!-- <li><a class="notify-item" href="#">Thông báo sự cố điện....</a></li>
+              <li><a class="notify-item" href="#">Thông báo sự cố điện....</a></li>
+              <li><a class="notify-item" href="#">Thông báo tiền phòng....</a></li>
+              
+              <li><a class="notify-item highlight" href="#">Thông báo thay đổi tiền rác....</a></li>
+              
+              <li><a class="notify-item" href="#">Thông báo sự cố điện....</a></li> --}}
+            </ul>
+
+            <div>
+                <a class="notify-footer" href="/{{role}}/thongbao/{{info.MaND}}">Hiện thêm thông báo</a>
+            </div>
+        </div>
+     </div>
+      {{!-- Người dùng --}}
+      <div class="dropdowninfo d-none d-sm-block">
+        <a
+          class="d-flex text-decoration-none pe-0 align-items-center cursor-pointer"
+          href="#"
+          role="button"
+          data-bs-toggle=""
+          aria-expanded="false"
+        >
+
+          <div class="me-2">
+            <b class="text-end text-primary h6 d-block mb-0">{{info.HoTen}}</b>
+            {{#if (eq role "admin")}}
+              <p class="text-end text-dark m-0 h6">Chủ trọ</p>
+            {{else}}
+              <p class="text-end text-dark m-0 h6">Người thuê</p>
+            {{/if}}
+          </div>
+
+          <div>
+            <img
+              class="rounded-circle border"
+              src="/img/{{info.AVT}}"
+              alt="Avt"
+              width="40"
+              height="40"
+              style="object-fit: cover; object-position: center;"
+            />
+          </div>
+        </a>
+
+        <ul
+          class="dropdown-menu dropdown-menu-end mt-3 shadow border-0 me-5"
+          style="background-color: #E8E8E8; min-width: 170px;"
+        >
+
+          <div
+            class="position-absolute top-0 end-0 translate-middle-y me-1"
+            style="width: 0; height: 0; border-left: 10px solid transparent; border-right: 10px solid transparent; border-bottom: 10px solid #E8E8E8;"
+          >
+          </div>
+
+          <li>
+            <a
+              class="dropdown-item fw-bold text-success py-2"
+              href="javascript:void(0)"
+              onclick="CapNhatThongTin('{{info.MaND}}', '{{role}}')"
+            >
+              <i class="bi bi-gear-fill me-2"></i>
+              Thông tin
+            </a>
+          </li>
+
+          <li>
+            <a
+              class="dropdown-item fw-bold text-warning text-warning py-2"
+              onclick="openForm('.form-doimk-cover')"
+            >
+              <i class="fa-solid fa-rotate me-2"></i>
+              Đổi mật khẩu
+            </a>
+          </li>
+
+          <li>
+            <a class="dropdown-item fw-bold text-danger py-2" href="/">
+              <i class="bi bi-box-arrow-right me-2"></i>
+              Đăng xuất
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</nav>
+<script>
+document.addEventListener("DOMContentLoaded", async function() {
+  const quyen = '{{role}}';
+  const id = '{{info.MaND}}';
+  async function layDL(){
+    const response = await fetch(`/${quyen}/thongbao/laydulieuthongbao/${id}`);
+    
+    if (!response.ok) {
+        alert("Không lấy được dữ liệu!");
+        return;
+    }
+    const data = await response.json();
+    return data; 
+  }
+
+  async function renderBadge(data){
+    const badge = document.querySelectorAll('.notification-badge');
+
+    badge.forEach(i => {
+      const soTBChuaDoc = (data < 10) ? data : "9+";
+      if(soTBChuaDoc == 0){
+        i.classList.add('d-none');
+        i.classList.remove('d-block');
+      }else{
+        i.classList.remove('d-none');
+        i.classList.add('d-block');
+        i.innerText = soTBChuaDoc;
+      }
+    });
+  }
+
+  async function renderNotifications(data) {
+    const listElements = document.querySelectorAll('.notify-list');
+
+    if (listElements.length === 0) {
+        console.error("Không tìm thấy thẻ .notify-list nào cả!");
+        return;
+    }
+      let htmlString = "";
+
+      if (!data || data.length === 0) {
+          htmlString = `
+              <li>
+                  <span class="notify-item text-muted" style="cursor: default; display:block; padding: 10px;">
+                      Không có thông báo nào
+                  </span>
+              </li>`;
+      } else {
+          const itemsToShow = data.slice(0, 5);
+          htmlString = itemsToShow.map(item => {
+              const activeClass = (item.TrangThai=="Chưa đọc") ? 'highlight' : '';
+              return `
+                  <li>
+                      <a class="notify-item ${activeClass}" href="/${quyen}/thongbao/chitiet/${item.MaTB}?ma={{info.MaND}}">
+                          [${item.TieuDe}] ${item.NoiDung}
+                      </a>
+                  </li>
+              `;
+          }).join('');
+      }
+      listElements.forEach(ul => {
+          ul.innerHTML = htmlString;
+    });
+  }
+
+  const data = await layDL();
+  renderBadge(data.tbcd);
+  renderNotifications(data.tb);
+});
+</script>

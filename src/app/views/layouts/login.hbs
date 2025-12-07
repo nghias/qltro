@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <link rel="stylesheet" href="/css/app.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <title>Document</title>
+</head>
+<body class="main" style="cursor: default;">
+    <nav class="navbar navbar-expand-lg p-0 fixed-top mt-2 ">
+        <div class="container-fluid w-50 header-color rounded-5">
+            <a class="navbar-brand p-0" href="/">
+            <img src="/img/logo.png" alt="" srcset="" height="50" width="50">
+            <b class="text-success">Xóm trọ</b>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse " id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#gioithieu"><b class="text-black">Giới thiệu</b></a>
+                </li>
+                <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="#lienhe"><b class="text-black">Liên Hệ</b></a>
+                </li>
+            </ul>
+            <a class="btn btn-success rounded-5" href="#dangnhap">Đăng nhập</a>
+        </nav>
+    <div id="gioithieu" class="gioi-thieu hero-content text-center text-white py-5 pt-5">
+        <h1 class="display-4 fw-bold mb-3 pt-5">Ứng dụng quản lý Xóm Trọ</h1>
+        <p class="lead fw-bold">Website quản lý phòng trọ giúp chủ trọ dễ dàng quản lý phòng, hóa đơn và thông báo cho người thuê.</p>
+        <p class="mt-4 fw-bold">Bên cho thuê sử dụng hệ thống để theo dõi hoạt động, tối ưu hành và nâng cao trải nghiệm người thuê.</p>
+    </div>
+    {{#if isTrue}}
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                showNotification('failure', 'Đăng nhập thất bại!');
+            });
+        </script>
+    {{/if}}
+    <div id="dangnhap" class="z-3 d-flex justify-content-center py-5">
+        <div class="p-3 rounded-2 w-auto h-auto position-relative" style="background-color: #E8E8E8; min-width: 400px;">
+            <h1 class="text-center text-success mb-2">Đăng Nhập</h1>
+
+            <form class="form-login" action="/" method="POST">
+                    <div class="mb-1">
+                        <label class="">Tên đăng nhập:</label>
+                        <input class="form-control" type="text" name="username">
+                        <small class="text-danger d-none" id="userNameError">Tên phòng không được để trống</small>
+                    </div>
+                    <div class="mb-1">
+                        <label class="form-label">Mật khẩu:</label>
+                        <div class="input-group">
+                            <input class="form-control" type="password" name="password" id="passwordInput">
+                            
+                            <span class="input-group-text" id="togglePassword" style="cursor: pointer;">
+                                <i class="bi bi-eye" id="toggleIcon"></i>
+                            </span>
+                        </div>
+                        <small class="text-danger d-none" id="passWordError">Mật khẩu không được để trống</small>
+                    </div>
+                    <div class="text-center mt-2">
+                        <button class="btn" type="reset">Quên mật khẩu</button>
+                        <button class="btn btn-success" type="submit" name="btnLogin" value="1">Đăng nhập</button>
+                    </div>
+                    <p class="m-0 mt-1">Nếu bạn chưa có tài khoản <a class="text-decoration-none" href="">Hãy liên hệ với chúng tôi</a></p>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <section id="lienhe" class="location-section pb-5">
+        <div class="container custom-container">
+            <div class="section-box p-4 p-md-5 header-color">
+                <div class="row align-items-center">
+                    <div class="col-md-6 mb-4 mb-md-0">
+                        <img src="/img/map.png" class="img-fluid rounded-3 shadow-lg" alt="Bản đồ vị trí">
+                    </div>
+
+                    <div class="col-md-6">
+                        <div class="ms-4">
+                            <h2 class="section-title mb-4 text-success">Vị Trí thuận lợi</h2>
+                        <ul class="location-list list-unstyled">
+                            <li>• Gần chợ Thuận Đạt</li>
+                            <li>• Gần chợ Hưng Long</li>
+                            <li>• Hợp đồng dễ dàng</li>
+                            <li>• Giá cả phải chăng</li>
+                            <li>• Tiện nghi, thoải mái</li>
+                        </ul>
+                        <a href="tel:0931493785" class="btn btn-contact mt-3"><b class="text-success">Liên hệ với chúng tôi</b></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="text-center py-4 footer-section">
+        <div class="container">
+            <a href="/" class="btn"><b class="h4 text-success">© 2024 XÓM TRỌ</b></a>
+            <p class="text-black mb-1 h5">Hộ kinh doanh cá nhân</p>
+            <a href="https://maps.app.goo.gl/LJvf7287cubtifUHA" target="_blank" class="btn btn-contact mb-1 d-block"><b>E15/64A Đường Đinh Văn Ước, xã Hưng Long, Thành phố Hồ Chí Minh</b></a>
+            <a href="tel:0931493785" class="btn btn-contact mb-1"><b>Số điện thoại: 093193785</b></a>
+            <a href="mailto:tuannghia5839@gmail.com" target="_blank" class="btn btn-contact mb-1"><b>Email: tuannghia5839@gmail.com</b></a>
+            <p class="text-success mb-0"><b>Chứng nhận kinh doanh số 0109154368 do Ủy ban nhân dân Huyện Bình Chánh cấp ngày 07/04/2020</b></p>
+        </div>
+    </footer>
+    <div class="modal fade" id="statusModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered modal-sm"> <div class="modal-content text-center" id="modalContent">
+                <div class="modal-body text-center">
+                    <i id="notifyIcon" class="status-icon bi"></i>
+                    <h4 id="notifyTitle" class="modal-title fw-bold h4"></h4>
+                </div>
+                
+                <div id="timerBar" class="timer-bar"></div>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="/js/app.js"></script>
+    <script src="/js/login.js"></script>
+    <script src="/js/security.js"></script>
+</body>
+</html>

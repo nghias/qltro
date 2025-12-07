@@ -1,0 +1,281 @@
+<div class="container-fluid" style="margin-top: 60px; margin-bottom: 40px;">
+    <div class="row">
+        
+        <div class="col-lg-6 col-md-12 mb-4" style="height: 400px;">
+            <div class="card custom-card">
+                <div class="card-header bg-cyan">
+                    Thông tin nhà trọ
+                </div>
+                <div class="card-body d-flex align-items-center">
+                    <div class="row w-100 gx-3">
+                        <div class="col-4">
+                            <div class="info-box box-blue">
+                                <h2 class="tkPhhong-Tong">0</h2>
+                                <p>Tổng số phòng</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="info-box box-green">
+                                <h2 class="tkPhhong-ChoThue">0</h2>
+                                <p>Số phòng cho thuê</p>
+                            </div>
+                        </div>
+                        <div class="col-4">
+                            <div class="info-box box-red">
+                                <h2 class="tkPhhong-Trong">0</h2>
+                                <p>Số phòng trống</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 mb-4" style="height: 400px;">
+            <div class="card custom-card">
+                <div class="card-header bg-purple">
+                    Thống kê
+                </div>
+                <div class="card-body">
+                    <canvas id="revenueChart" style="height: 220px; width: 100%;"></canvas>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row">
+
+        <div class="col-lg-6 col-md-12 mb-4" style="height: 400px;">
+            <div class="card custom-card">
+                <div class="card-header bg-lime">
+                    Theo dõi khách thuê
+                </div>
+                <div class="card-body custom-list bg-light bg-opacity-25">
+                    <div class="row mt-2">
+                        <div class="col-8 fw-bold">Nội dung</div>
+                        <div class="col-4 fw-bold text-end">Số lượng khách</div>
+                    </div>
+                    <hr>
+                    <div class="row align-items-center" style="height: 40px;">
+                        <div class="col-8 label-text">Tổng số khách thuê</div>
+                        <div class="col-4 value-text TongSoKT"></div>
+                    </div>
+                    <div class="row align-items-center" style="height: 40px;">
+                        <div class="col-8 label-text">Tổng số khách đang thuê</div>
+                        <div class="col-4 value-text TongSoKTDT"></div>
+                    </div>
+                    <div class="row align-items-center" style="height: 40px;">
+                        <div class="col-8 label-text">Tổng số khách thuê hết hạn hợp đồng</div>
+                        <div class="col-4 value-text TongSoKTHH"></div>
+                    </div>
+                    <div class="row align-items-center" style="height: 40px;">
+                        <div class="col-8 label-text">Tổng số khách thuê chưa có hợp đồng</div>
+                        <div class="col-4 value-text TongSoKTCC"></div>
+                    </div>
+                    <div style="height: 45px;"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6 col-md-12 mb-4" style="height: 400px;">
+            <div class="card custom-card">
+                <div class="card-header bg-red text-white">
+                    Theo dõi thanh toán
+                </div>
+                <div class="card-body custom-list bg-light bg-opacity-25">
+                    <div class="row mb-3">
+                        <div class="col-md-3">
+                            <label class="fw-bold">Tháng</label>
+                            <select id="filterMonth" class="form-select form-select-sm">
+                                <option value="1">Tháng 1</option>
+                                <option value="2">Tháng 2</option>
+                                <option value="3">Tháng 3</option>
+                                <option value="4">Tháng 4</option>
+                                <option value="5">Tháng 5</option>
+                                <option value="6">Tháng 6</option>
+                                <option value="7">Tháng 7</option>
+                                <option value="8">Tháng 8</option>
+                                <option value="9">Tháng 9</option>
+                                <option value="10">Tháng 10</option>
+                                <option value="11">Tháng 11</option>
+                                <option value="12">Tháng 12</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3">
+                            <label class="fw-bold">Năm</label>
+                            <select id="filterYear" class="form-select form-select-sm">
+                                <option value="2023">Năm 2023</option>
+                                <option value="2024">Năm 2024</option>
+                                <option value="2025">Năm 2025</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="row fw-bold">
+                        <div class="col-6">Nội dung</div>
+                        <div class="col-3 text-end">Số lượng hóa đơn</div>
+                        <div class="col-3 text-end">Số tiền</div>
+                    </div>
+                    <hr class="my-2">
+                    
+                    <div class="row">
+                        <div class="col-6 label-text">Tổng số hóa đơn trong tháng</div>
+                        <div class="col-3 value-text text-end" id="txtTongSL">0</div>
+                        <div class="col-3 value-text text-end" id="txtTongTien">0 ₫</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 label-text">Tổng số hóa đơn đã thanh toán</div>
+                        <div class="col-3 value-text text-end text-success" id="txtDaTT_SL">0</div>
+                        <div class="col-3 value-text text-end text-success" id="txtDaTT_Tien">0 ₫</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-6 label-text">Tổng số hóa đơn chưa thanh toán</div>
+                        <div class="col-3 value-text text-end text-danger" id="txtChuaTT_SL">0</div>
+                        <div class="col-3 value-text text-end text-danger" id="txtChuaTT_Tien">0 ₫</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", async function() {
+    async function LayDLTK() {
+        try {
+            const response = await fetch(`/admin/laydlthongke`);
+            if (!response.ok) {
+                console.error("Lỗi HTTP: " + response.status);
+                return null;
+            }
+            return await response.json();
+        } catch (error) {
+            console.error("Lỗi fetch:", error);
+            return null;
+        }
+    }
+    function loadChart(data){
+        const labels = data.map(item => item.ThangHienThi);
+        const values = data.map(item => Number(item.TongTien));
+
+        const ctx = document.getElementById('revenueChart').getContext('2d');
+        const revenueChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels, 
+                datasets: [{
+                    label: 'Doanh Thu',
+                    data: values, 
+                    backgroundColor: '#9575cd',
+                    borderRadius: 4,
+                    barPercentage: 0.7
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'bottom',
+                        labels: { boxWidth: 10 }
+                    },
+                    title: {
+                        display: true,
+                        text: 'VNĐ', 
+                        align: 'start',
+                        font: { size: 12, weight: 'normal' },
+                        color: '#666'
+                    },
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                let value = context.raw;
+                                return ' Doanh thu: ' + value.toLocaleString('vi-VN', {style: 'currency', currency: 'VND'});
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN');
+                            }
+                        },
+                        grid: { borderDash: [2, 2], drawBorder: false }
+                    },
+                    x: {
+                        grid: { display: false }
+                    }
+                }
+            }
+        });
+    }
+    function loadTKPhong(data){
+        document.querySelector('.tkPhhong-Tong').innerText = data.TongSoPhong;
+        document.querySelector('.tkPhhong-ChoThue').innerText = data.SoPhongDaThue;
+        document.querySelector('.tkPhhong-Trong').innerText = data.SoPhongTrong;
+    }
+    function loadTKNguoiDung(data){
+        document.querySelector('.TongSoKT').innerText = data.tongKhachHang;
+        document.querySelector('.TongSoKTDT').innerText = data.dangThue;
+        document.querySelector('.TongSoKTHH').innerText = data.hetHanHopDong;
+        document.querySelector('.TongSoKTCC').innerText = data.chuaCoHopDong;
+    }
+
+    const selMonth = document.getElementById('filterMonth');
+    const selYear = document.getElementById('filterYear');
+
+    // Hàm format tiền VND
+    const formatVND = (amount) => {
+        return Number(amount).toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+    };
+    async function loadPaymentStats(data) {
+        const month = selMonth.value;
+        const year = selYear.value;
+
+        try {
+            // Gọi API (Bạn nhớ thay đường dẫn đúng với Router nodejs của bạn)
+            const res = await fetch(`/admin/thongkethanhtoan?thang=${month}&nam=${year}`);
+            if(!res.ok) throw new Error('Lỗi tải dữ liệu');
+            
+            const data = await res.json();
+
+            document.getElementById('txtTongSL').innerText = data.ThanhToan.TongHD;
+            document.getElementById('txtTongTien').innerText = formatVND(data.ThanhToan.TongTien);
+
+            document.getElementById('txtDaTT_SL').innerText = data.ThanhToan.DaThanhToan_SL;
+            document.getElementById('txtDaTT_Tien').innerText = formatVND(data.ThanhToan.DaThanhToan_Tien);
+
+            document.getElementById('txtChuaTT_SL').innerText = data.ThanhToan.ChuaThanhToan_SL;
+            document.getElementById('txtChuaTT_Tien').innerText = formatVND(data.ThanhToan.ChuaThanhToan_Tien);
+
+        } catch (err) {
+            console.error(err);
+        }
+    }
+
+    // Tự động chọn tháng/năm hiện tại khi mới vào web
+    const today = new Date();
+    selMonth.value = today.getMonth() + 1; // getMonth() trả về 0-11
+    selYear.value = today.getFullYear();
+
+    // Gắn sự kiện: Khi đổi tháng hoặc năm thì tự load lại
+    selMonth.addEventListener('change', loadPaymentStats);
+    selYear.addEventListener('change', loadPaymentStats);
+
+    // Load lần đầu
+    loadPaymentStats();
+
+    const dataTK = await LayDLTK();
+
+    loadChart(dataTK.dsHD);
+    loadTKPhong(dataTK.Phong);
+    loadTKNguoiDung(dataTK.NguoiDung)
+});
+</script>

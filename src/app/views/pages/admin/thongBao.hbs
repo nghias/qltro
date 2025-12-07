@@ -1,0 +1,193 @@
+<div class="container mt-4" style="margin-top: 60px !important;">
+    <div class="search-bar-container">
+        <form action="/{{role}}/thongbao" method="get" class="input-group search-box">
+            <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
+            <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchPP" value="{{search}}">
+            <button class="btn btn-main" type="submit">Tìm kiếm</button>
+        </form>
+        <button class="btn btn-main"
+            data-status="them"
+        onclick="SoanThongBao('{{role}}','{{ma}}')">Soạn</button>
+    </div>
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-white border-bottom p-3 d-flex align-items-center">
+            <div class="form-check me-3">
+                <input class="form-check-input" type="checkbox" id="checkAll">
+            </div>
+            {{!-- làm mới --}}
+            <button class="btn btn-light btn-sm me-2" title="Làm mới" onclick="window.location.href = '/{{role}}/thongbao/{{ma}}';"><i class="fas fa-rotate-right"></i></button>
+            <div class="form-check me-3 form-toolbar toolbar d-none">
+                {{!-- Đã đọc --}}
+                <button class="btn btn-light btn-sm" 
+                onclick="DaDocNhieuTB('{{role}}','{{ma}}')"
+                title="Đánh dấu đã đọc nhiều"><i class="fas fa-envelope-open"></i></button>
+                {{!-- Xóa --}}
+                <button class="btn btn-light btn-sm"
+                onclick="XoaNhieuTB('{{role}}','{{ma}}')"
+                title="Xóa nhiều"><i class="fas fa-trash text-secondary"></i></button>
+            </div>
+            <span class="ms-auto text-muted small">Số thông báo chưa đọc: {{tongSoThongBao}}</span>
+        </div>
+
+        <div class="list-group list-group-flush gmail-list">
+        {{#if empty}}
+            <div class="text-center p-5 text-muted">Hộp thư trống</div>
+        {{else}}
+            {{#each thongbao}}
+            <a href="/{{@root.role}}/thongbao/chitiet/{{this.MaTB}}?ma={{@root.ma}}" 
+            class="list-group-item list-group-item-action gmail-row d-flex align-items-center gap-3 py-2">
+                
+                <div class="gmail-actions d-flex align-items-center gap-3">
+                    <input class="form-check-input check-item m-0" type="checkbox" onclick="event.stopPropagation();"
+                    value="{{this.MaTB}}">
+                </div>
+
+                <div class="gmail-sender text-truncate
+                {{#if (eq this.TrangThai "Chưa đọc")}}fw-bold {{#if this.MaND}}text-black{{else}}text-success{{/if}}{{/if}}">
+                    {{#if this.MaND}}
+                        Gửi đến {{this.NDNhan}}
+                    {{else}}
+                        Từ {{this.NDGui}}
+                    {{/if}}
+                </div>
+
+                <div class="gmail-content text-truncate flex-grow-1">
+                    <span class="gmail-subject 
+                    {{#if (eq this.TrangThai "Chưa đọc")}}fw-bold {{#if this.MaND}}text-black{{else}}text-success{{/if}}{{/if}}"
+                    >{{this.TieuDe}}</span>
+                    <span class="text-muted mx-1
+                    {{#if (eq this.TrangThai "Chưa đọc")}}fw-bold {{#if this.MaND}}text-black{{else}}text-success{{/if}}{{/if}}"
+                    >-</span>
+                    <span class="gmail-snippet small 
+                    {{#if (eq this.TrangThai "Chưa đọc")}}fw-bold {{#if this.MaND}}text-black{{else}}text-success{{/if}}{{/if}}"
+                    >{{this.NoiDung}}</span>
+                </div>
+
+                <div class="gmail-end-col text-end ps-2">
+                    <span class="gmail-date small 
+                    {{#if (eq this.TrangThai "Chưa đọc")}}fw-bold {{#if this.MaND}}text-black{{else}}text-success{{/if}}{{/if}}">
+                        {{this.NgayGui}}
+                    </span>
+
+                    <form action="" method="POST" class="gmail-hover-actions" style="display: none;">
+                        {{!-- Đã đọc --}}
+                        {{#if (eq this.TrangThai "Chưa đọc")}}
+                            {{#if this.MaND}}
+                            {{else}}
+                            <button class="btn btn-light btn-sm rounded-circle shadow-none border-0" 
+                            formaction="/{{@root.role}}/thongbao/dadoc/{{this.MaTB}}?ma={{@root.ma}}&_method=PUT"
+                            type="submit"
+                            title="Đánh dấu đã đọc"
+                            ><i class="fas fa-envelope-open"></i></button>
+                            {{/if}}
+                        {{else}}
+                         {{!-- Chưa đọc --}}
+                            {{#if this.MaND}}
+                            {{else}}
+                            <button class="btn btn-light btn-sm" 
+                            formaction="/{{@root.role}}/thongbao/chuadoc/{{this.MaTB}}?ma={{@root.ma}}&_method=PUT"
+                            type="submit"
+                            title="Đánh dấu chưa đọc"><i class="fas fa-envelope"></i></button>
+                            {{/if}}
+                        {{/if}}
+                        {{!-- Xóa --}}
+                        <button class="btn btn-light btn-sm rounded-circle shadow-none border-0" 
+                        formaction="/{{@root.role}}/thongbao/{{this.MaTB}}?ma={{@root.ma}}&_method=DELETE"
+                        type="submit"
+                        title="Xóa"  
+                        onclick="event.stopPropagation();">
+                        <i class="fas fa-trash text-secondary"></i></button>
+                    </form>
+                </div>
+            </a>
+            {{/each}}
+        {{/if}}
+        </div>
+    </div>
+</div>
+
+<div class="form-thongbao-cover form-cover z-3 fixed-top d-none justify-content-center h-100" 
+style="overflow-y: auto;"
+onclick="closeForm('.form-thongbao-cover')">
+    <div class="p-3 rounded-2 position-relative" 
+    onclick="event.stopPropagation()" 
+    style=" background-color: #E8E8E8; width: 400px; height: fit-content; margin-bottom: 60px;">
+        
+        {{!-- Nút đóng form --}}
+        <button class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder"
+         onclick="closeForm('.form-thongbao-cover')"></button>
+
+        <h3 class="form-thongbao-title text-center text-success mb-4">Thư mới</h3>
+
+        <form class="form-thongbao" action="" method="POST">
+            <div class="mb-3 h-auto">
+                <label class="form-label">Chọn người nhận:</label>
+                <div class="containerNguoiNhan row border p-2 rounded"
+                 style="max-height: 120px; overflow-y: scroll;"></div>
+                 <small class="text-danger d-none" id="NNhanError">a</small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Tiêu đề:</label>
+                <input type="text" name="TieuDe" class="form-control">
+                <small class="text-danger d-none" id="TieuDeError"></small>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Nội dung:</label>
+                <textarea style="height: 200px;" name="NoiDung" class="form-control"></textarea>
+                <small class="text-danger d-none" id="NoiDungError"></small>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-success px-4" type="submit">Gửi</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+    
+    // Khai báo biến
+    const checkAll = document.getElementById('checkAll');
+    const checkboxes = document.querySelectorAll('.check-item');
+    const toolbar = document.querySelector('.toolbar');
+
+    // --- HÀM 1: CẬP NHẬT GIAO DIỆN ---
+    function updateToolbar() {
+        // Đếm số lượng đang được tích
+        const checkedItems = document.querySelectorAll('.check-item:checked');
+        const count = checkedItems.length;
+
+        if (count > 0) {
+            // Có chọn -> HIỆN TOOLBAR
+            toolbar.classList.remove('d-none');
+            toolbar.classList.add('d-flex');
+        } else {
+            // Không chọn -> ẨN TOOLBAR
+            toolbar.classList.add('d-none');
+            toolbar.classList.remove('d-flex');
+            checkAll.checked = false;
+        }
+    }
+    if(checkAll){
+        checkAll.addEventListener('change', function() {
+            checkboxes.forEach(cb => {
+                cb.checked = checkAll.checked;
+            });
+            updateToolbar();
+        });
+    }
+    
+    // Khi bấm từng nút con
+    if(checkboxes){
+        checkboxes.forEach(cb => {
+            cb.addEventListener('change', function() {
+                if (!this.checked) checkAll.checked = false;
+                const allChecked = document.querySelectorAll('.check-item:checked').length === checkboxes.length;
+                if (allChecked) checkAll.checked = true;
+
+                updateToolbar();
+            });
+        });
+    }
+});
+</script>
