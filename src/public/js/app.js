@@ -1711,10 +1711,7 @@ if(formTLTB) {
 
 // Hàm BẬT màn hình loading
 function showLoading() {
-    const loader = document.getElementById('loading-overlay');
-    if (!loader) {
-        loader.style.display = 'flex';
-    }
+    document.getElementById('loading-overlay').style.display = 'flex';
     document.body.style.overflow = "hidden";
 }
 
