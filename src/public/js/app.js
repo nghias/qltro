@@ -1709,15 +1709,6 @@ if(formTLTB) {
     });
 }
 
-// -------------------------------------
-//              Loading
-// -------------------------------------
-document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', function() {
-        showLoading();
-    });
-});
-
 // Hàm BẬT màn hình loading
 function showLoading() {
     document.getElementById('loading-overlay').style.display = 'flex';
@@ -1727,3 +1718,26 @@ function showLoading() {
 function hideLoading() {
     document.getElementById('loading-overlay').style.display = 'none';
 }
+window.addEventListener('load', function() {
+    // Ẩn màn hình loading
+    const loader = document.getElementById('loading-overlay');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+});
+document.addEventListener("DOMContentLoaded", function() {
+    // Tìm tất cả thẻ <a> trong trang
+    const links = document.querySelectorAll('a');
+
+    links.forEach(link => {
+        link.addEventListener('click', function(event) {
+            const href = this.getAttribute('href');
+            const target = this.getAttribute('target');
+            
+            if (href && href !== '#' && !href.startsWith('javascript') && target !== '_blank') {
+                
+                showLoading();
+            }
+        });
+    });
+});

@@ -425,6 +425,7 @@ document.addEventListener("DOMContentLoaded", async function() {
   const quyen = '{{role}}';
   const id = '{{info.MaND}}';
   async function layDL(){
+
     const response = await fetch(`/${quyen}/thongbao/laydulieuthongbao/${id}`);
     
     if (!response.ok) {
