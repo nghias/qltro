@@ -1705,3 +1705,13 @@ if(formTLTB) {
         }
     });
 }
+
+// Hàm BẬT màn hình loading
+function showLoading() {
+    document.getElementById('loading-overlay').style.display = 'flex';
+}
+
+// Hàm TẮT màn hình loading
+function hideLoading() {
+    document.getElementById('loading-overlay').style.display = 'none';
+}
