@@ -1,6 +1,6 @@
 <div class="contract-card-cover row justify-content-center mb-5">
     <div class="search-bar-container">
-        <form action="/admin/hopdong" method="get" class="input-group search-box">
+        <form action="/admin/hopdong" method="get" class="input-group search-box" onsubmit="showLoading()">
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" 
             name="searchHDT" value="{{search}}">

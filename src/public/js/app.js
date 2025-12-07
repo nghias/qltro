@@ -1565,6 +1565,7 @@ function copyText(element) {
 // -------------------------------------
 async function sendRequest(url, method, ids) {
     try {
+        showLoading();
         const response = await fetch(url, {
             method: method,
             headers: { 'Content-Type': 'application/json' },
@@ -1578,6 +1579,8 @@ async function sendRequest(url, method, ids) {
         }
     } catch (error) {
         console.error(error);
+    }finally{
+        hideLoading();
     }
 }
 async function XoaNhieuTB(quyen, ma) {

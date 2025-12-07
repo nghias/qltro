@@ -52,7 +52,7 @@
 </script>
 <div class="contract-card-cover row justify-content-center mb-5">
     <div class="search-bar-container mb-2">
-        <form action="/admin/dienuoc/capnhatgia" method="POST" class="d-flex align-items-center gap-2 price-update-group">
+        <form action="/admin/dienuoc/capnhatgia" method="POST" class="d-flex align-items-center gap-2 price-update-group" onsubmit="showLoading()">
             <label class="fw-bold text-teal mb-0">Giá điện:</label>
             <input type="number" name="giaDien" class="form-control text-center w-auto" 
                 value="{{giadn.GiaDien}}">
@@ -65,7 +65,7 @@
         </form>
     </div>
     <div class="search-bar-container">
-        <form action="/admin/diennuoc" method="get" class="input-group search-box">
+        <form action="/admin/diennuoc" method="get" class="input-group search-box" onsubmit="showLoading()">
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchDN" value="{{search}}">
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
@@ -146,7 +146,7 @@
                 </div>
             </div>
             {{else}}
-            <form action="/admin/diennuoc" method="POST" id="formWizard">
+            <form action="/admin/diennuoc" method="POST" id="formWizard" onsubmit="showLoading()">
                 
                 <input type="hidden" name="dataJson" id="dataJsonHidden">
 
@@ -206,7 +206,7 @@ onclick="closeForm('.form-csdn-cover')">
 
         <h3 class="form-csdn-title text-center text-success mb-4">a</h3>
 
-        <form class="form-csdn" action="/admin/diennuoc" method="POST">
+        <form class="form-csdn" action="/admin/diennuoc" method="POST" onsubmit="showLoading()">
             <div class="mb-3">
                 <label class="form-label">Chỉ số điện củ </label>
                 <input type="text" name="CSDC" class="form-control" readonly>
@@ -249,7 +249,7 @@ onclick="closeForm('.form-csdn-xn-cover')">
         onclick="closeForm('.form-csdn-xn-cover')"></button>
         <h3 class="form-csdn-xn-title text-center text-success mb-4">Xóa Phụ Phí</h3>
 
-        <form class="form-csdn-xn" action="" method="POST">
+        <form class="form-csdn-xn" action="" method="POST" onsubmit="showLoading()">
             <div class="text-center">
                 <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
                 {{!-- Nút hủy xóa --}}

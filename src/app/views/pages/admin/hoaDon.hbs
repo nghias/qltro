@@ -53,12 +53,12 @@
 </script>
 <div class="container" style="margin-top: 60px; margin-bottom: 60px;">
     <div class="search-bar-container">
-        <form action="/admin/diennuoc" method="get" class="input-group search-box">
+        <form action="/admin/diennuoc" method="get" class="input-group search-box" onsubmit="showLoading()">
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchDN" value="{{search}}">
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
         </form>
-        <form action="/admin/hoadon" method="POST">
+        <form action="/admin/hoadon" method="POST" onsubmit="showLoading()">
             <button class="btn btn-main">Tạo hóa đơn</button>
         </form>
     </div>
@@ -247,7 +247,7 @@ onclick="closeForm('.form-hoadon-xn-cover')">
         onclick="closeForm('.form-hoadon-xn-cover')"></button>
         <h3 class="form-hoadon-xn-title text-center text-success mb-4">Xóa Phụ Phí</h3>
 
-        <form class="form-hoadon-xn" action="" method="POST">
+        <form class="form-hoadon-xn" action="" method="POST" onsubmit="showLoading()">
             <div class="text-center">
                 <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
                 {{!-- Nút hủy xóa --}}

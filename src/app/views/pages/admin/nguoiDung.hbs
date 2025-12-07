@@ -58,7 +58,7 @@
 <div class="container my-5" style="margin-top: 60px !important;">
 
     <div class="search-bar-container">
-        <form action="/admin/nguoidung" method="get" class="input-group search-box">
+        <form action="/admin/nguoidung" method="get" class="input-group search-box" onsubmit="showLoading()">
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchND" value="{{search}}">
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
@@ -115,7 +115,7 @@ onclick="closeForm('.form-nguoidung-cover')">
 
         <h3 class="form-nguoidung-title text-center text-success mb-4">a</h3>
 
-        <form class="form-nguoidung" action="/admin/nguoidung" method="POST" enctype="multipart/form-data">
+        <form class="form-nguoidung" action="/admin/nguoidung" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
             <input type="hidden" name="MaND">
             <input type="hidden" name="HinhNDCu">
 
@@ -196,7 +196,7 @@ onclick="closeForm('.form-nguoidung-xn-cover')">
         onclick="closeForm('.form-nguoidung-xn-cover')"></button>
         <h3 class="form-nguoidung-xn-title text-center text-success mb-4">Xóa Người Dùng</h3>
 
-        <form class="form-nguoidung-xn" action="" method="POST">
+        <form class="form-nguoidung-xn" action="" method="POST" onsubmit="showLoading()">
             <input type="hidden" name="HinhNDxn">
             <div class="text-center">
                 <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>

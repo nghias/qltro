@@ -50,7 +50,7 @@
 
     <!-- Thanh tìm kiếm -->
     <div class="d-flex gap-3 mb-4 justify-content-center">
-        <form action="/admin/phongtro" method="get" class="input-group search-box">
+        <form action="/admin/phongtro" method="get" class="input-group search-box" onsubmit="showLoading()">
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="search" value="{{search}}">
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
@@ -114,7 +114,7 @@ onclick="closeForm('.form-phong-cover')">
 
         <h3 class="form-phong-title text-center text-success mb-4">Sửa Phòng</h3>
 
-        <form class="form-phong" action="/admin/phongtro" method="POST" enctype="multipart/form-data">
+        <form class="form-phong" action="/admin/phongtro" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
             <input type="hidden" name="HinhCu">
 
             <div class="mb-3">
@@ -192,7 +192,7 @@ onclick="closeForm('.form-phong-xoa-cover')">
         onclick="closeForm('.form-phong-xoa-cover')"></button>
         <h3 class="text-center text-success mb-4">Xóa Phòng</h3>
 
-        <form class="form-phong-xoa" action="/admin/phongtro" method="POST">
+        <form class="form-phong-xoa" action="/admin/phongtro" method="POST" onsubmit="showLoading()">
             <input type="hidden" name="HinhXoa">
             <div class="text-center">
                 <button class="btn-xoa btn btn-success px-4" type="submit">Đồng ý</button>
