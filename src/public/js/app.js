@@ -1709,6 +1709,15 @@ if(formTLTB) {
     });
 }
 
+// -------------------------------------
+//              Loading
+// -------------------------------------
+document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', function() {
+        showLoading();
+    });
+});
+
 // Hàm BẬT màn hình loading
 function showLoading() {
     document.getElementById('loading-overlay').style.display = 'flex';
