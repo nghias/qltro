@@ -8,16 +8,20 @@ const methodOverride = require('method-override');
 const helmet = require('helmet');
 
 const app = express();
-
 const PORT = process.env.PORT || 3000;
 
-
+app.enable('trust proxy');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
+
 app.use(session({
     secret: process.env.SECRET,
     resave: false,
-    saveUninitialized: false
+    saveUninitialized: false,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24
+    }
 }));
 app.use((req, res, next) => {
     res.locals.id = req.session.user?.id || null;
@@ -30,11 +34,8 @@ app.use(helmet());
 
 app.use(methodOverride('_method'));
 
-app.use(express.static(path.join(__dirname, 'public')));
-
-// Cache file tĩnh trong 1 ngày (86400000 ms)
 app.use(express.static(path.join(__dirname, 'public'), {
-    maxAge: '1d', 
+    maxAge: 1000 * 60 * 60 * 24, 
     etag: false
 }));
 
