@@ -54,11 +54,9 @@ class PhuPhi {
             OR GhiChu LIKE ?
         `;
 
-        // CHÚ Ý: SQL ở trên chỉ có 2 dấu ? nên chỉ truyền searchTerm 2 lần
         const [rows] = await pool.query(sql, [searchTerm, searchTerm]);
         
-        // Lưu ý: Nếu pool dùng chung cho cả app thì ĐỪNG dùng pool.end() ở đây, nó sẽ ngắt kết nối database của các user khác.
-        // await pool.end(); 
+        await pool.end(); 
 
         return (rows.length === 0)? [] : rows.map(r => new PhuPhi(r));
     }

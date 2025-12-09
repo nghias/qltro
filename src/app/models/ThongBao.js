@@ -23,6 +23,28 @@ class ThongBao {
         await pool.end();
         return (rows.length === 0)? [] : rows.map(r => new ThongBao(r));
     }
+    static async findByKeyword(keyword, id) {
+        const pool = await db();
+
+        const searchTerm = `%${keyword}%`;
+
+        const sql = `
+            SELECT tb.*
+            FROM ThongBao tb
+            JOIN NguoiDung nd ON tb.NDGui = nd.MaND OR tb.NDNhan = nd.MaND
+            WHERE 
+                (tb.TieuDe LIKE ? 
+                OR tb.NoiDung LIKE ? 
+                OR nd.HoTen LIKE ?)
+                AND (NDGui = ? OR NDNhan = ?)
+        `;
+
+        const [rows] = await pool.query(sql, [searchTerm, searchTerm, searchTerm, id, id]);
+        
+        await pool.end(); 
+
+        return (rows.length === 0)? [] : rows.map(r => new ThongBao(r));
+    }
     static async getByID(id) {
         const pool = await db();
 
@@ -61,26 +83,6 @@ class ThongBao {
         await pool.end();
 
         return (rows.length === 0)? [] : rows.map(r => new ThongBao(r));
-    }
-    static async findByKeyword(keyword) {
-        const pool = await db();
-
-        const searchTerm = `%${keyword}%`;
-
-        // SỬA CÂU SQL: Lấy Hợp Đồng làm gốc (FROM hopdongthue)
-        const sql = `
-            SELECT * FROM PhuPhi 
-            WHERE TenPP LIKE ? 
-            OR GhiChu LIKE ?
-        `;
-
-        // CHÚ Ý: SQL ở trên chỉ có 2 dấu ? nên chỉ truyền searchTerm 2 lần
-        const [rows] = await pool.query(sql, [searchTerm, searchTerm]);
-        
-        // Lưu ý: Nếu pool dùng chung cho cả app thì ĐỪNG dùng pool.end() ở đây, nó sẽ ngắt kết nối database của các user khác.
-        // await pool.end(); 
-
-        return (rows.length === 0)? [] : rows.map(r => new PhuPhi(r));
     }
     static async create(data) {
         const pool = await db();

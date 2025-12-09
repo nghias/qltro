@@ -105,9 +105,30 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Thường trú:</label>
-                    <input type="text" name="ThuongTruTT" class="form-control">
-                    <small class="text-danger d-none" id="ThuongTruTTError">a</small>
+                    <label class="form-label">Địa chỉ liên hệ:</label>
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <input type="text" id="street" class="form-control" placeholder="Số nhà, tên đường..." oninput="updateAddressString()">
+                        </div>
+                        <div class="col-12">
+                            <select class="form-select" id="province" onchange="updateAddressString()">
+                                <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <select class="form-select" id="district" disabled onchange="updateAddressString()">
+                                <option value="">-- Chọn Quận/Huyện --</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <select class="form-select" id="ward" disabled onchange="updateAddressString()">
+                                <option value="">-- Chọn Phường/Xã --</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <input type="text" name="ThuongTruTT" class="form-control mt-3" readonly id="fullAddress">
+                    <small class="text-danger d-none" id="ThuongTruTTError">Vui lòng nhập đầy đủ địa chỉ</small>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Ảnh người dùng:</label>
@@ -198,5 +219,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
     <script src="/js/main.min.js"></script>
     <script src="/js/security.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </body>
 </html>

@@ -148,10 +148,30 @@ onclick="closeForm('.form-nguoidung-cover')">
                 </div>
             </div>
             <div class="mb-3">
-                <label class="form-label">Thường trú:</label>
-                <input type="text" name="ThuongTruND" class="form-control" placeholder="Nhập địa chỉ thường trú">
-                <small class="text-danger d-none" id="ThuongTruNDError">a</small>
-            </div>
+                    <label class="form-label">Địa chỉ liên hệ:</label>
+                    <div class="row g-2">
+                        <div class="col-12">
+                            <input type="text" id="street" class="form-control" placeholder="Số nhà, tên đường..." oninput="updateAddressString()">
+                        </div>
+                        <div class="col-12">
+                            <select class="form-select" id="province" onchange="updateAddressString()">
+                                <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <select class="form-select" id="district" disabled onchange="updateAddressString()">
+                                <option value="">-- Chọn Quận/Huyện --</option>
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <select class="form-select" id="ward" disabled onchange="updateAddressString()">
+                                <option value="">-- Chọn Phường/Xã --</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="text" name="ThuongTruND" class="form-control mt-3" placeholder="Nhập địa chỉ thường trú" readonly id="fullAddress">
+                    <small class="text-danger d-none" id="ThuongTruNDError">a</small>
+                </div>
             <div class="mb-3">
                 <label class="form-label">Ảnh người dùng:</label>
                 <input type="file" name="HinhND" class="form-control" placeholder="Chọn ảnh"  onchange="xemThuAnh(this,'.AVTND')">

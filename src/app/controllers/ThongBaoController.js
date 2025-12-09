@@ -3,15 +3,15 @@ const Phong = require('../models/Phong');
 const ThongBao = require('../models/ThongBao');
 class ThongBaoController{
     async thongBao(req, res){
-        // const search = req.query.searchPP || "";
+        const search = req.query.searchTB || "";
         const id = req.params.id;
         let dsthongbao;
-        // if(search.trim()===""){
-        //     dsPhuPhi = await PhuPhi.getAll();
-        // }else{
-        //     dsPhuPhi = await PhuPhi.findByKeyword(search);
-        // }
-        dsthongbao = await ThongBao.getAll(id);
+        if(search.trim()===""){
+            dsthongbao = await ThongBao.getAll(id);
+        }else{
+            dsthongbao = await ThongBao.findByKeyword(search, id);
+        }
+        
         const nd = await NguoiDung.getById(id);
         if (!dsthongbao || dsthongbao.length === 0) {
             return res.render(`pages/${nd.Quyen}/thongBao`, { 

@@ -305,55 +305,62 @@ function validaPassWord(name, idErr) {
         });
     }
 }
+function checkValidAddress(addressString) {
+    if (!addressString) return false;
 
+    var parts = addressString.split(',');
+
+    if (parts.length < 3) {
+        return false;
+    }
+
+    for (var i = 0; i < parts.length; i++) {
+        var part = parts[i].trim(); 
+
+        if (part === "") {
+            return false;
+        }
+    }
+
+    return true;
+}
 // -------------------------------------
 //              PopUp
 // -------------------------------------
 
 const myModal = new bootstrap.Modal(document.getElementById('statusModal'));
 
-// Lấy các phần tử DOM cần thiết
 const modalContent = document.getElementById('modalContent');
 const notifyIcon = document.getElementById('notifyIcon');
 const notifyTitle = document.getElementById('notifyTitle');
 const timerBar = document.getElementById('timerBar');
 
-let closeTimeout; // Biến lưu ID của bộ đếm giờ
+let closeTimeout;
 
 function showNotification(type, title) {
-    // 1. Xóa bộ đếm giờ cũ nếu đang chạy (tránh xung đột khi bấm liên tục)
     clearTimeout(closeTimeout);
 
-    // 2. Reset thanh thời gian (xóa class animation để chạy lại từ đầu)
     timerBar.classList.remove('running');
-    // Force reflow: Dòng này "lừa" trình duyệt vẽ lại để animation có thể reset ngay lập tức
     void timerBar.offsetWidth; 
 
-    // 3. Thiết lập nội dung và giao diện
     if (type === 'success') {
-        // Giao diện thành công
         modalContent.className = 'modal-content success-theme';
-        notifyIcon.className = 'status-icon bi bi-check-circle-fill d-block mb-3'; // Icon dấu tích
+        notifyIcon.className = 'status-icon bi bi-check-circle-fill d-block mb-3'; 
     } else {
-        // Giao diện thất bại
         modalContent.className = 'modal-content failure-theme';
-        notifyIcon.className = 'status-icon bi bi-x-circle-fill d-block mb-3'; // Icon dấu X
+        notifyIcon.className = 'status-icon bi bi-x-circle-fill d-block mb-3'; 
     }
     
     notifyTitle.textContent = title;
 
-    // 4. Hiển thị Modal
     myModal.show();
 
-    // 5. Bắt đầu chạy thanh thời gian
     timerBar.classList.add('running');
 
-    // 6. Hẹn giờ đóng modal sau ms
     closeTimeout = setTimeout(() => {
         myModal.hide();
     }, 1000);
 }
-
 // -------------------------------------
 //              Phòng Trọ
 // -------------------------------------
@@ -512,6 +519,7 @@ async function ThemNguoiDung() {
         document.getElementsByName("NamSinhND").value = formatDateToInput(today);
         document.getElementsByName("SDTND")[0].value = "";
         document.getElementsByName("ThuongTruND")[0].value = "";
+        document.getElementById("street").value = "";
         document.getElementsByName("QuyenND")[0].value = "";
         document.getElementsByName("HinhNDCu")[0].value = "";
 
@@ -544,6 +552,7 @@ async function SuaNguoiDung(id) {
         document.getElementsByName("NamSinhND")[0].value = formatDateToInput(data.NamSinh);
         document.getElementsByName("SDTND")[0].value = data.SDT;
         document.getElementsByName("ThuongTruND")[0].value = data.ThuongTru;
+        document.getElementById("street").value = (data.ThuongTru).split(',')[0].trim();
         document.getElementsByName("QuyenND")[0].value = data.Quyen;
         document.getElementsByName("HinhNDCu")[0].value = data.AVT;
         
@@ -642,7 +651,7 @@ if(formNguoiDung) {
             hasError = true;
         }
 
-        if (tt === "" || !regex.test(tt)) {
+        if (tt === "" || !regex.test(tt) || !checkValidAddress(tt)) {
             showErr(ttInput, document.querySelector("#ThuongTruNDError"), "Địa chỉ không hợp lệ");
             hasError = true;
         }
@@ -681,7 +690,7 @@ if(formNguoiDung) {
     });
 }
 // -------------------------------------
-//              Thông tin tài khoản
+//               Tài khoản
 // -------------------------------------
 
 async function CapNhatThongTin(id, role) {
@@ -701,6 +710,7 @@ async function CapNhatThongTin(id, role) {
         document.getElementsByName("NamSinhTT")[0].value = formatDateToInput(data.NamSinh);
         document.getElementsByName("SDTTT")[0].value = data.SDT;
         document.getElementsByName("ThuongTruTT")[0].value = data.ThuongTru;
+        document.getElementById("street").value = (data.ThuongTru).split(',')[0].trim();
         document.getElementsByName("HinhTTCu")[0].value = data.AVT;
         
         // Xử lý ảnh (nếu có)
@@ -757,7 +767,7 @@ if(formThongTin){
             hasError = true;
         }
 
-        if (tt === "" || !regex.test(tt)) {
+        if (tt === "" || !regex.test(tt) || !checkValidAddress(tt)) {
             showErr(ttInput, document.querySelector("#ThuongTruTTError"), "Địa chỉ không hợp lệ");
             hasError = true;
         }
@@ -797,12 +807,6 @@ if(formThongTin){
     });
 }
 
-
-
-// -------------------------------------
-//              Đổi mật khẩu
-// -------------------------------------
-
 // Hàm xử lý ẩn hiện password
 function setupPasswordToggle(inputId, toggleId, iconId) {
     const input = document.getElementById(inputId);
@@ -830,9 +834,9 @@ function setupPasswordToggle(inputId, toggleId, iconId) {
 }
 
 // Gọi hàm cho 3 ô input tương ứng
-setupPasswordToggle('MKCInput', 'toggleMKC', 'iconMKC');       // Mật khẩu cũ
-setupPasswordToggle('MKMInput', 'toggleMKM', 'iconMKM');       // Mật khẩu mới
-setupPasswordToggle('XNMKMInput', 'toggleXNMKM', 'iconXNMKM'); // Xác nhận mật khẩu
+setupPasswordToggle('MKCInput', 'toggleMKC', 'iconMKC');      
+setupPasswordToggle('MKMInput', 'toggleMKM', 'iconMKM');       
+setupPasswordToggle('XNMKMInput', 'toggleXNMKM', 'iconXNMKM');
 
 validaPassWord('MKC','#MKCError');
 validaPassWord('MKM','#MKMError');
@@ -1819,3 +1823,86 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     });
 });
+// -------------------------------------
+//              API Tỉnh thành
+// -------------------------------------
+const provinceSelect = document.getElementById("province");
+const districtSelect = document.getElementById("district");
+const wardSelect = document.getElementById("ward");
+const streetInput = document.getElementById("street");
+const fullAddressInput = document.getElementById("fullAddress");
+
+var dataVietnam = [];
+axios.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
+    .then((response) => {
+        dataVietnam = response.data; 
+        renderOptions(dataVietnam, "province"); 
+    })
+    .catch((error) => {
+        console.error("Lỗi tải dữ liệu:", error);
+        alert("Không tải được dữ liệu hành chính. Vui lòng kiểm tra mạng!");
+    });
+
+var renderOptions = (arrayData, type) => {
+    let htmlContent = '<option value="">-- Chọn --</option>';
+    
+    arrayData.forEach(item => {
+        htmlContent += `<option value="${item.Id}" data-name="${item.Name}">${item.Name}</option>`;
+    });
+
+    if (type === "province") {
+        provinceSelect.innerHTML = htmlContent;
+    } else if (type === "district") {
+        districtSelect.innerHTML = htmlContent;
+        districtSelect.disabled = false;
+    } else if (type === "ward") {
+        wardSelect.innerHTML = htmlContent;
+        wardSelect.disabled = false;
+    }
+}
+
+provinceSelect.addEventListener("change", function() {
+    districtSelect.innerHTML = '<option value="">-- Chọn Quận/Huyện --</option>';
+    districtSelect.disabled = true;
+    wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+    wardSelect.disabled = true;
+
+    if (this.value) {
+        const selectedProvince = dataVietnam.find(p => p.Id === this.value);
+        if (selectedProvince && selectedProvince.Districts) {
+            renderOptions(selectedProvince.Districts, "district");
+        }
+    }
+    updateAddressString();
+});
+
+districtSelect.addEventListener("change", function() {
+    wardSelect.innerHTML = '<option value="">-- Chọn Phường/Xã --</option>';
+    wardSelect.disabled = true;
+
+    if (this.value) {
+        const selectedProvince = dataVietnam.find(p => p.Id === provinceSelect.value);
+        const selectedDistrict = selectedProvince.Districts.find(d => d.Id === this.value);
+        
+        if (selectedDistrict && selectedDistrict.Wards) {
+            renderOptions(selectedDistrict.Wards, "ward");
+        }
+    }
+    updateAddressString();
+});
+
+wardSelect.addEventListener("change", updateAddressString);
+streetInput.addEventListener("input", updateAddressString);
+
+function updateAddressString() {
+    const pText = provinceSelect.options[provinceSelect.selectedIndex]?.dataset.name || "";
+    const dText = districtSelect.options[districtSelect.selectedIndex]?.dataset.name || "";
+    const wText = wardSelect.options[wardSelect.selectedIndex]?.dataset.name || "";
+    const sText = streetInput.value.trim();
+
+    if (provinceSelect.value || districtSelect.value || wardSelect.value || sText) {
+        fullAddressInput.value = `${sText}, ${wText}, ${dText}, ${pText}`;
+    } else {
+        fullAddressInput.value = "";
+    }
+}
