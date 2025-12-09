@@ -1,4 +1,81 @@
 // -------------------------------------
+//              Header
+// -------------------------------------
+const navLinks = document.querySelectorAll(".header.nav-link");
+
+function normalize(path) {
+    if (!path) return "/";
+    try {
+        const url = new URL(path, location.origin);
+        let p = url.pathname.toLowerCase();
+        p = p.replace(/\/index\.html$/, "");
+        if (p.length > 1 && p.endsWith("/")) p = p.slice(0, -1);
+        return p;
+    } catch (e) {
+        return path;
+    }
+}
+
+let prefix = "";
+if (location.pathname.startsWith("/admin")) prefix = "/admin";
+if (location.pathname.startsWith("/user")) prefix = "/user";
+
+function addPrefix(href) {
+    if (!href) return ""; 
+    if (!href.startsWith("/")) href = "/" + href;
+    if (href.startsWith("/admin") || href.startsWith("/user")) return href;
+    return prefix + href;
+}
+
+const current = normalize(location.pathname);
+let bestLength = -1;
+
+navLinks.forEach(link => {
+    const href = link.getAttribute("href");
+    if (!href || href === "#") return;
+
+    const fullHref = addPrefix(href);
+    const linkPath = normalize(fullHref);
+
+    const exact = current === linkPath;
+    const parent = current.startsWith(linkPath + "/");
+
+    if (exact || parent) {
+        if (linkPath.length > bestLength) {
+            bestLength = linkPath.length;
+        }
+    }
+});
+
+navLinks.forEach(l => l.classList.remove("header-selected", "active"));
+
+if (bestLength > -1) {
+    navLinks.forEach(link => {
+        const href = link.getAttribute("href");
+        if (!href || href === "#") return;
+
+        const fullHref = addPrefix(href);
+        const linkPath = normalize(fullHref);
+
+        const exact = current === linkPath;
+        const parent = current.startsWith(linkPath + "/");
+        
+        if ((exact || parent) && linkPath.length === bestLength) {
+            
+            link.classList.add("header-selected", "active");
+
+            const parentDropdown = link.closest('.dropdown');
+            if (parentDropdown) {
+                const parentToggle = parentDropdown.querySelector('[data-bs-toggle="dropdown"]');
+                if (parentToggle && !parentToggle.classList.contains("active")) {
+                    parentToggle.classList.add("header-selected", "active");
+                }
+            }
+        }
+    });
+}
+
+// -------------------------------------
 //              Chung
 // -------------------------------------
 

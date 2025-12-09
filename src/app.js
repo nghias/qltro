@@ -32,6 +32,12 @@ app.use(methodOverride('_method'));
 
 app.use(express.static(path.join(__dirname, 'public')));
 
+// Cache file tĩnh trong 1 ngày (86400000 ms)
+app.use(express.static(path.join(__dirname, 'public'), {
+    maxAge: '1d', 
+    etag: false
+}));
+
 // cấu hình template engine
 app.engine("hbs", engine({ 
     extname: ".hbs",
