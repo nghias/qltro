@@ -4,9 +4,7 @@
 }
 .main{
     width: 100%;
-    background: 
-      linear-gradient(to bottom right, rgb(0, 255, 149), rgba(0, 80, 200, 0.4)),
-      url("/mnt/data/052c660d-e715-46ce-b2af-cae56cca5edc.png") center/cover no-repeat fixed;
+    background: linear-gradient(to bottom right, rgb(0, 255, 149), rgba(0, 80, 200, 0.4));
 }
 .gioi-thieu{
     position: relative;
