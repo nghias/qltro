@@ -221,22 +221,21 @@
     <script src="/js/security.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </body>
-<script>
-    (function() {
-        function killLoading() {
-            var loader = document.getElementById('loading-overlay');
-            if (loader) {
-                loader.style.display = 'none';
-                loader.style.visibility = 'hidden';
-                loader.style.opacity = '0';
+    <script>
+        (function() {
+            function killLoading() {
+                var loader = document.getElementById('loading-overlay');
+                if (loader) {
+                    loader.style.display = 'none';
+                    loader.style.visibility = 'hidden';
+                    loader.style.opacity = '0';
+                }
+                document.body.style.overflow = 'auto';
             }
-            document.body.style.overflow = 'auto';
-        }
-        killLoading();
-        window.addEventListener('pageshow', function(event) {
             killLoading();
-        });
-    })();
-</script>
-</body>
+            window.addEventListener('pageshow', function(event) {
+                killLoading();
+            });
+        })();
+    </script>
 </html>

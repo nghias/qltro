@@ -293,4 +293,21 @@
     <script src="/js/login.min.js"></script>
     <script src="/js/security.min.js"></script>
 </body>
+    <script>
+        (function() {
+            function killLoading() {
+                var loader = document.getElementById('loading-overlay');
+                if (loader) {
+                    loader.style.display = 'none';
+                    loader.style.visibility = 'hidden';
+                    loader.style.opacity = '0';
+                }
+                document.body.style.overflow = 'auto';
+            }
+            killLoading();
+            window.addEventListener('pageshow', function(event) {
+                killLoading();
+            });
+        })();
+    </script>
 </html>
