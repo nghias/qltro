@@ -1804,23 +1804,29 @@ function hideLoading() {
     }
     document.body.style.overflow = "auto";
 }
+
 window.addEventListener('load', function() {
     hideLoading();
-    
 });
-document.addEventListener("DOMContentLoaded", function() {
-    // Tìm tất cả thẻ <a> trong trang
-    const links = document.querySelectorAll('a');
 
-    links.forEach(link => {
-        link.addEventListener('click', function(event) {
-            const href = this.getAttribute('href');
-            const target = this.getAttribute('target');
+// Sửa lại đoạn logic click thẻ a một chút
+links.forEach(link => {
+    link.addEventListener('click', function(event) {
+        const href = this.getAttribute('href');
+        const target = this.getAttribute('target');
+        
+        if (href && href !== '#' && !href.startsWith('javascript') && target !== '_blank') {
             
-            if (href && href !== '#' && !href.startsWith('javascript') && target !== '_blank') {
-                showLoading();
+            if (href.match(/\.(zip|rar|doc|docx|xls|xlsx|pdf|png|jpg)$/i)) {
+                 return; 
             }
-        });
+
+            showLoading();
+
+            setTimeout(function() {
+                hideLoading();
+            }, 10000);
+        }
     });
 });
 // -------------------------------------
