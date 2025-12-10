@@ -1264,7 +1264,6 @@ if(formPhuPhi) {
 
 function moFormGhiDienNuoc() {
     const modal = document.getElementById('modalDienNuoc');
-    // Bỏ class d-none, thêm d-flex để căn giữa
     modal.classList.remove('d-none');
     modal.classList.add('d-flex');
     const formTaoCS = document.getElementById('formWizard');
@@ -1273,10 +1272,8 @@ function moFormGhiDienNuoc() {
     }
 }
 
-// Hàm đóng form
 function dongFormGhiDienNuoc() {
     const modal = document.getElementById('modalDienNuoc');
-    // Ẩn đi
     modal.classList.remove('d-flex');
     modal.classList.add('d-none');
 }
@@ -1302,9 +1299,7 @@ function TaoFormChiSo() {
     let currentIndex = 0;
     const totalSteps = slides.length;
 
-    // Hàm cập nhật giao diện
     function updateUI() {
-        // 1. Ẩn hiện các slide
         slides.forEach((slide, index) => {
             if (index === currentIndex) {
                 slide.classList.remove('d-none');
@@ -1313,26 +1308,22 @@ function TaoFormChiSo() {
             }
         });
 
-        // 2. Cập nhật nút bấm
         btnPrev.disabled = (currentIndex === 0);
         
         if (currentIndex === totalSteps - 1) {
             btnNext.classList.add('d-none');
-            btnSubmit.classList.remove('d-none'); // Hiện nút Save ở bước cuối
+            btnSubmit.classList.remove('d-none'); 
         } else {
             btnNext.classList.remove('d-none');
             btnSubmit.classList.add('d-none');
         }
 
-        // 3. Cập nhật tiến độ
         if(stepIndicator){
             stepIndicator.textContent = `Phòng ${currentIndex + 1} / ${totalSteps}`;
         }
     }
 
-    // Sự kiện nút Next
     btnNext.addEventListener('click', async () => {
-        // Validate: Không cho next nếu chưa nhập
         const currentSlide = slides[currentIndex];
 
         const dienInput = currentSlide.querySelector('.inp-dien');
@@ -1355,11 +1346,9 @@ function TaoFormChiSo() {
 
         const data = await response.json(); 
 
-        // Xóa dấu chấm (nếu có) rồi mới chuyển thành số
         const SoDCu = Number((data.cs[0].SoDCu).replace(/\./g, ''));
         const SoNCu = Number((data.cs[0].SoNCu).replace(/\./g, ''));
 
-        // Kiêm tra điện
         if(!dien) {
             showErr(dienInput,dienErr, 'Vui lòng nhập chỉ số điện')
             return;
@@ -1372,7 +1361,6 @@ function TaoFormChiSo() {
         }else{
             hideErr(dienInput,dienErr);
         }
-        // Kiêm tra nước
         if(!nuoc) {
             showErr(nuocInput,nuocErr, 'Vui lòng nhập chỉ số nước')
             return;
@@ -1392,7 +1380,6 @@ function TaoFormChiSo() {
         }
     });
 
-    // Sự kiện nút Prev
     btnPrev.addEventListener('click', () => {
         if (currentIndex > 0) {
             currentIndex--;
@@ -1400,20 +1387,16 @@ function TaoFormChiSo() {
         }
     });
 
-    // Sự kiện Submit Form
     if(formFinal){
         formFinal.addEventListener('submit', (e) => {
-            // Ngăn form gửi ngay để mình xử lý data đã
             e.preventDefault();
 
-            // Duyệt qua tất cả các slide để gom dữ liệu
             const dataArr = [];
             slides.forEach(slide => {
                 const maPhong = slide.querySelector('.inp-maphong').value;
                 const soDien = slide.querySelector('.inp-dien').value;
                 const soNuoc = slide.querySelector('.inp-nuoc').value;
 
-                // Chỉ đẩy vào mảng nếu có dữ liệu (hoặc bắt buộc hết tùy bạn)
                 if(maPhong) {
                     dataArr.push({
                         MaPhong: maPhong,
@@ -1423,13 +1406,10 @@ function TaoFormChiSo() {
                 }
             });
 
-            // Chuyển mảng object thành chuỗi JSON
             const jsonString = JSON.stringify(dataArr);
             
-            // Gán vào input hidden
             dataJsonHidden.value = jsonString;
 
-            // Gửi form đi
             formFinal.submit();
         });
     }
@@ -1455,7 +1435,6 @@ async function SuaCSDN(id) {
         document.getElementsByName("CSDM")[0].value = data.cs[0].SoDMoi;
         document.getElementsByName("CSNM")[0].value = data.cs[0].SoDMoi;
 
-        // mở form
         openForm('.form-csdn-cover');
         document.querySelector('.form-csdn-title').innerText = "Sửa Chỉ số";
 
@@ -1548,9 +1527,8 @@ async function openInvoiceModal(id,user) {
     
     listElement.innerHTML=``;
 
-    // Duyệt qua từng item để tạo thẻ li
     phuphi.forEach(item => {
-        totalAmount += ChuyenSo(item.Gia); // Cộng dồn tổng tiền
+        totalAmount += ChuyenSo(item.Gia); 
         
         htmlContent += `
             <li class="list-group-item d-flex justify-content-between align-items-center">
@@ -1560,7 +1538,6 @@ async function openInvoiceModal(id,user) {
         `;
     });
 
-    // Thêm dòng Tổng phụ phí (dùng class list-group-item-secondary như mẫu)
     htmlContent += `
         <li class="list-group-item list-group-item-secondary d-flex justify-content-between align-items-center fw-bold">
             <span>Tổng phụ phí</span>
@@ -1568,7 +1545,6 @@ async function openInvoiceModal(id,user) {
         </li>
     `;
 
-    // Gán HTML vào thẻ ul
     listElement.innerHTML = htmlContent;
 
     const trangthai = document.querySelector('.hdTrangThai');
@@ -1588,7 +1564,6 @@ async function openInvoiceModal(id,user) {
     thanhtien.innerText = ChuyenSoStr(tonghd)+" VNĐ";
 }
 
-// Hàm đóng form
 function closeInvoiceModal() {
     modalDetail.classList.remove('show');
     setTimeout(() => { modalDetail.style.display = 'none'; }, 300);
@@ -1608,7 +1583,6 @@ function XNTraHD(id) {
 function xoaDauVaKhoangTrang(str) {
     if (!str) return "";
 
-    // 1. Xóa dấu tiếng Việt
     str = str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
     str = str.replace(/đ/g, "d").replace(/Đ/g, "D");
     str = str.replace(/\s+/g, "");
@@ -1633,10 +1607,7 @@ async function MaQRHD(id) {
     
 }
 function copyText(element) {
-    // 1. Lấy nội dung chữ và cắt bỏ khoảng trắng thừa 2 đầu
     const textToCopy = element.innerText.trim();
-
-    // 2. Copy vào clipboard
     navigator.clipboard.writeText(textToCopy);
     alert("Đã sao chép !!")
 }
@@ -1665,7 +1636,6 @@ async function sendRequest(url, method, ids) {
     }
 }
 async function XoaNhieuTB(quyen, ma) {
-    // Lấy danh sách ID
     const selectedIds = Array.from(document.querySelectorAll('.check-item:checked')).map(cb => cb.value);
 
     await sendRequest(`/${quyen}/thongbao/xoanhieu/${ma}`, 'DELETE', selectedIds);
@@ -1673,7 +1643,6 @@ async function XoaNhieuTB(quyen, ma) {
 async function DaDocNhieuTB(quyen, ma) {
     const selectedIds = Array.from(document.querySelectorAll('.check-item:checked')).map(cb => cb.value);
     
-    // Gửi Fetch
     await sendRequest(`/${quyen}/thongbao/dadocnhieu/${ma}`, 'PUT', selectedIds);
 }
 async function SoanThongBao(quyen, ma) {
@@ -1689,7 +1658,7 @@ async function SoanThongBao(quyen, ma) {
     const data = await response.json(); 
 
     const divContainer = document.querySelector('.containerNguoiNhan');
-    divContainer.innerHTML = ''; // Xóa sạch cũ
+    divContainer.innerHTML = ''; 
 
     data.dsNN.forEach(nguoi => {
         const htmlItem = `
@@ -1705,7 +1674,6 @@ async function SoanThongBao(quyen, ma) {
                     </label>
             </div>
         `;
-        // Chèn vào container
         divContainer.insertAdjacentHTML('beforeend', htmlItem);
     });
 
@@ -1719,7 +1687,6 @@ if(formSoanTB) {
         
         let hasError = false;
 
-        // --- LẤY INPUT ---
         const tdInput = document.getElementsByName("TieuDe")[0];
         const ndInput = document.getElementsByName("NoiDung")[0];
         const checkedBoxes = document.querySelectorAll('input[name="NNhan[]"]:checked');
