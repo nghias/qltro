@@ -1,3 +1,4 @@
+
 <div class="contract-card-cover row justify-content-center mb-5">
     <div class="search-bar-container">
         <form action="/admin/hopdong" method="get" class="input-group search-box" onsubmit="showLoading()">
@@ -50,18 +51,18 @@
                     <span class="sub-label">Thông tin phòng:</span>
                 </div>
                 <div class="col-6">
-                    <span class="sub-label">{{this.phong.[0].Ten}}</span>
+                    <span class="sub-label">{{this.phong.Ten}}</span>
                 </div>
             </div>
 
             <div class="row row-item">
                 <div class="col-6 info-text">Diện tích:</div>
-                <div class="col-6 info-value">{{this.phong.[0].DienTich}} m²</div>
+                <div class="col-6 info-value">{{this.phong.DienTich}} m²</div>
             </div>
 
             <div class="row row-item">
                 <div class="col-6 info-text">Giá thuê:</div>
-                <div class="col-6 info-value">{{this.phong.[0].Gia}} VND</div>
+                <div class="col-6 info-value">{{this.phong.Gia}} VND</div>
             </div>
 
             <div class="row row-item">

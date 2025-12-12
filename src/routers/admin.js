@@ -55,15 +55,14 @@ router.delete('/nguoidung/:id', middleWare.isAdmin, NguoiDungController.xoaNguoi
 
 router.get('/phongtro', middleWare.isAdmin, PhongTroController.phongTro);
 router.get('/phongtro/:id', middleWare.isAdmin, PhongTroController.layThongTinPhong);
-router.post('/phongtro', upload.single("Hinh"), middleWare.isAdmin, PhongTroController.themPhongTro);
-router.put('/phongtro/:id', upload.single("Hinh"), middleWare.isAdmin, PhongTroController.suaPhongTro);
+router.post('/phongtro', upload.single("HinhPhong"), middleWare.isAdmin, PhongTroController.themPhongTro);
+router.put('/phongtro/:id', upload.single("HinhPhong"), middleWare.isAdmin, PhongTroController.suaPhongTro);
 router.delete('/phongtro/:id', middleWare.isAdmin, PhongTroController.xoaPhongTro);
 
 
-router.get('/thongke', middleWare.isAdmin, ThongKeController.thongKe);
 
 router.get('/acc/:id', loginController.getAccupdate);
-router.put('/accupdate/:id', upload.single("HinhTT"), loginController.accupdate);
+router.put('/accupdate/:id', upload.single("HinhND"), loginController.accupdate);
 router.post('/mkupdate', loginController.mkupdate);
 
 router.get('/thongbao/laydlsoan', middleWare.isAdmin, ThongBaoController.layDLSoan);
@@ -80,6 +79,7 @@ router.delete('/thongbao/:id', middleWare.isAdmin, ThongBaoController.xoaThongBa
 
 router.get('/thongkethanhtoan', middleWare.isAdmin, ThongKeController.layDLTKTT);
 router.get('/laydlthongke', middleWare.isAdmin, ThongKeController.layDLTK);
+router.get('/thongke', middleWare.isAdmin, ThongKeController.thongKe);
 router.get('/', middleWare.isAdmin, ThongKeController.thongKe);
 
 module.exports = router;

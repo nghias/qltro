@@ -52,9 +52,9 @@ class NguoiDungController{
                 return res.redirect('/admin/nguoiDung?status=cmndfail');
             }
             
-            await NguoiDung.create(data);
+            const newND = await NguoiDung.create(data);
             
-            return res.redirect('/admin/nguoiDung?status=them');
+            return res.redirect('/admin/nguoiDung?status=themsua&highlight='+newND.MaND);
         } catch (error) {
             res.status(500).redirect('/admin/nguoiDung?status=fail');
         }
@@ -74,18 +74,18 @@ class NguoiDungController{
             }
             const existSDT = await NguoiDung.checkExist('SDT', req.body.SDTND);
             const existCMND = await NguoiDung.checkExist('CCCD', req.body.CMNDND);
-            if (existSDT != null && existSDT != req.body.MaND) {
+            if (existSDT != null && existSDT != id) {
                 return res.redirect('/admin/nguoiDung?status=sdtfail');
             }
-            if (existCMND != null && existCMND != req.body.MaND) {
+            if (existCMND != null && existCMND != id) {
                 return res.redirect('/admin/nguoiDung?status=cmndfail');
             }
-            if(req.file){
-                deleteImage(tenFileAnh);
+            if(req.file && req.body.HinhNDCu != 'logo.png'){
+                deleteImage(req.body.HinhNDCu);
             }
 
-            await NguoiDung.update(req.body.MaND, data);
-            return res.redirect('/admin/nguoiDung?status=sua');
+            await NguoiDung.update(id, data);
+            return res.redirect('/admin/nguoiDung?status=sua&highlight='+id);
         } catch (error) {
             res.status(500).redirect('/admin/nguoiDung?status=fail');
         }
@@ -105,7 +105,7 @@ class NguoiDungController{
             const id = req.params.id;
             const HinhCu = req.body.HinhNDXoa;
             
-            deleteImage(HinhCu);
+            if(HinhCu!='logo.png') deleteImage(HinhCu);
 
             await NguoiDung.delete(id);
 

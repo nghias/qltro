@@ -1,10 +1,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Lấy tham số 'status' trên thanh địa chỉ
         const urlParams = new URLSearchParams(window.location.search);
         const status = urlParams.get('status');
+        const targetId = urlParams.get('highlight');
 
-        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
         if (status) {
             let title = '';
             let type = 'success';
@@ -28,24 +27,28 @@
                     break;
 
                 default:
-                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
-                    // Không hiện popup, không làm gì cả
                     return; 
             }
-
-            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
             showNotification(type, title,);
-
-            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
-            const newUrl = window.location.pathname;
-            window.history.replaceState(null, null, newUrl);
         }
+        if (targetId) {
+            const row = document.getElementById("pp-" + targetId);
+            
+            if (row) {
+                row.scrollIntoView({ behavior: "smooth", block: "center" });
+                
+                row.classList.add("highlight-row");
+                
+            }
+        }
+        const newUrl = window.location.pathname;
+        window.history.replaceState(null, null, newUrl);
     });
 </script>
 <div class="container my-5" style="margin-top: 60px !important;">
 
     <div class="search-bar-container">
-        <form action="/admin/phuphi" method="get" class="input-group search-box" onsubmit="showLoading()">
+        <form action="/admin/phuphi" method="get" class="input-group search-box" >
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchPP" value="{{search}}">
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
@@ -69,7 +72,7 @@
             </thead>
             <tbody>
                 {{#each dsPhuPhi}}
-                <tr>
+                <tr id="pp-{{this.MaPP}}">
                     <td>{{this.TenPP}}</td>
                     <td>{{this.Gia}}</td>
                     <td>{{this.GhiChu}}</td>
@@ -100,7 +103,7 @@ onclick="closeForm('.form-phuphi-cover')">
 
         <h3 class="form-phuphi-title text-center text-success mb-4">a</h3>
 
-        <form class="form-phuphi" action="/admin/phuphi" method="POST" onsubmit="showLoading()">
+        <form class="form-phuphi" action="/admin/phuphi" method="POST" >
             <input type="hidden" name="MaPP">
             
             <div class="mb-3">
@@ -148,7 +151,7 @@ onclick="closeForm('.form-phuphi-xn-cover')">
         onclick="closeForm('.form-phuphi-xn-cover')"></button>
         <h3 class="form-phuphi-xn-title text-center text-success mb-4">Xóa Phụ Phí</h3>
 
-        <form class="form-phuphi-xn" action="" method="POST" onsubmit="showLoading()">
+        <form class="form-phuphi-xn" action="" method="POST" >
             <div class="text-center">
                 <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
                 {{!-- Nút hủy xóa --}}

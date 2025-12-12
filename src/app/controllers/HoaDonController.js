@@ -10,7 +10,7 @@ class HoaDonController{
         const dsHoaDonB = await HoaDon.getAll();
         const dsHoaDon = await Promise.all(dsHoaDonB.map(async (hd)=>{
             const phong = await Phong.getByMaHD(hd.MaHD);
-            const tenPhong = (phong && phong.length > 0) ? phong[0].Ten : "Không xác định";
+            const tenPhong = (phong && phong.length > 0) ? phong.Ten : "Không xác định";
             return {
                 ...hd,
                 TenPhong:tenPhong,
@@ -43,8 +43,8 @@ class HoaDonController{
             const gia = await GiaDienNuoc.getByID(hd.MaGia);
             res.json({
                 HD:hd,
-                Phong: phongTro[0],
-                CS: {...cs[0]},
+                Phong: phongTro,
+                CS: {...cs},
                 PP: JSON.stringify(pp),
                 Gia: gia
             });
@@ -60,10 +60,10 @@ class HoaDonController{
             await Promise.all(dshdt.map(async (hdt)=>{
                 const phong = await Phong.getByMaHDT(hdt.MaHDT);
                 
-                const cs = await CSDienNuoc.getByMaPhongNew(phong[0].MaPhong);
+                const cs = await CSDienNuoc.getByMaPhongNew(phong.MaPhong);
                 if(cs && cs.length == 0) return res.status(500).redirect('/admin/hoadon?status=fail');
-                const ttdien = parseInt(cs[0].SoDMoi.toString().replace(/\./g, '')) - parseInt(cs[0].SoDCu.toString().replace(/\./g, ''));
-                const ttnuoc = parseInt(cs[0].SoNMoi.toString().replace(/\./g, '')) - parseInt(cs[0].SoDCu.toString().replace(/\./g, ''));
+                const ttdien = parseInt(cs.SoDMoi.toString().replace(/\./g, '')) - parseInt(cs.SoDCu.toString().replace(/\./g, ''));
+                const ttnuoc = parseInt(cs.SoNMoi.toString().replace(/\./g, '')) - parseInt(cs.SoDCu.toString().replace(/\./g, ''));
                 const giadn = await GiaDienNuoc.getByNew();
                 const giadien = parseInt(giadn.GiaDien.toString().replace(/\./g, ''));
                 const gianuoc = parseInt(giadn.GiaNuoc.toString().replace(/\./g, ''));
@@ -77,10 +77,10 @@ class HoaDonController{
 
                 const tongdien = ttdien*giadien;
                 const tongnuoc = ttnuoc*gianuoc;
-                const giaphong = phong[0].Gia;
+                const giaphong = phong.Gia;
 
                 const data = {
-                    MaCS: cs[0].MaCS,
+                    MaCS: cs.MaCS,
                     MaHDT: hdt.MaHDT,
                     MaGia: giadn.MaGia,
                     TienPhong: giaphong,
@@ -110,7 +110,7 @@ class HoaDonController{
         try{
             const id = req.params.id;
             await HoaDon.XacNhanTraAdmin(id);
-            res.redirect('/admin/hoadon?status=xntra');
+            res.redirect('/admin/hoadon?status=xntra&highlight='+id);
         }catch (error) {
             res.status(500).redirect('/admin/hoadon?status=fail');
         }
@@ -119,7 +119,7 @@ class HoaDonController{
         try{
             const id = req.params.id;
             await HoaDon.XacNhanTraUser(id);
-            res.redirect('/user/hoadon?status=xntra');
+            res.redirect('/user/hoadon?status=xntra&highlight='+id);
         }catch (error) {
             res.status(500).redirect('/user/hoadon?status=fail');
         }
@@ -132,7 +132,7 @@ class HoaDonController{
             const phongTro = await Phong.getByMaHD(id);
             res.json({
                 NgayTinh:hd.NgayTinh,
-                TenPhong: phongTro[0].Ten
+                TenPhong: phongTro.Ten
             });
         } catch (error) {
             console.error(error);

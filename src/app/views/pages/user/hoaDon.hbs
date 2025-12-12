@@ -1,10 +1,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Lấy tham số 'status' trên thanh địa chỉ
         const urlParams = new URLSearchParams(window.location.search);
         const status = urlParams.get('status');
+        const targetId = urlParams.get('highlight');
 
-        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
         if (status) {
             let title = '';
             let type = 'success';
@@ -37,18 +36,23 @@
                     break;
 
                 default:
-                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
-                    // Không hiện popup, không làm gì cả
                     return; 
             }
 
-            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
             showNotification(type, title,);
-
-            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
-            const newUrl = window.location.pathname;
-            window.history.replaceState(null, null, newUrl);
         }
+        if (targetId) {
+            const row = document.getElementById("hdu-" + targetId);
+            
+            if (row) {
+                row.scrollIntoView({ behavior: "smooth", block: "center" });
+                
+                row.classList.add("highlight-row");
+                
+            }
+        }
+        const newUrl = window.location.pathname;
+        window.history.replaceState(null, null, newUrl);
     });
 </script>
 <div class="container" style="margin-top: 60px; margin-bottom: 60px;">
@@ -57,7 +61,7 @@
     {{else}}
     {{#each dsHoaDon}}
     <!-- ==== CARD 1 ==== -->
-    <div class="bill-card">
+    <div class="bill-card" id="hdu-{{this.MaHD}}">
         <div class="bill-header">
             <span>{{this.NgayTinh}}</span>
             <a href="javascript:void(0)" onclick="openInvoiceModal('{{this.MaHD}}','user')" class="text-white text-decoration-none">Xem chi tiết >></a>
@@ -228,7 +232,7 @@ onclick="closeForm('.form-hoadon-xn-cover')">
         onclick="closeForm('.form-hoadon-xn-cover')"></button>
         <h3 class="form-hoadon-xn-title text-center text-success mb-4">Xóa Phụ Phí</h3>
 
-        <form class="form-hoadon-xn" action="" method="POST" onsubmit="showLoading()">
+        <form class="form-hoadon-xn" action="" method="POST">
             <div class="text-center">
                 <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
                 {{!-- Nút hủy xóa --}}

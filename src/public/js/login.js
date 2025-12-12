@@ -90,3 +90,26 @@ document.querySelector(".form-login").addEventListener("submit", function (e) {
         e.preventDefault();
     }
 });
+
+// Hàm BẬT màn hình loading
+function showLoading() {
+    document.getElementById('loading-overlay').style.display = 'flex';
+    document.body.style.overflow = "hidden";
+}
+
+// Hàm TẮT màn hình loading
+function hideLoading() {
+    const loader = document.getElementById('loading-overlay');
+    if (loader) {
+        loader.style.display = 'none';
+    }
+    document.body.style.overflow = "auto";
+}
+
+window.addEventListener('load', function() {
+    hideLoading();
+});
+
+window.addEventListener('beforeunload', function () {
+    showLoading();
+});

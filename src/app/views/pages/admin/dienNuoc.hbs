@@ -1,10 +1,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Lấy tham số 'status' trên thanh địa chỉ
         const urlParams = new URLSearchParams(window.location.search);
         const status = urlParams.get('status');
+        const targetId = urlParams.get('highlight');
 
-        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
         if (status) {
             let title = '';
             let type = 'success';
@@ -36,23 +35,27 @@
                     break;
 
                 default:
-                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
-                    // Không hiện popup, không làm gì cả
                     return; 
             }
-
-            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
             showNotification(type, title,);
-
-            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
-            const newUrl = window.location.pathname;
-            window.history.replaceState(null, null, newUrl);
         }
+        if (targetId) {
+            const row = document.getElementById("nguoidung-" + targetId);
+            
+            if (row) {
+                row.scrollIntoView({ behavior: "smooth", block: "center" });
+                
+                row.classList.add("highlight-row");
+                
+            }
+        }
+        const newUrl = window.location.pathname;
+        window.history.replaceState(null, null, newUrl);
     });
 </script>
 <div class="contract-card-cover row justify-content-center mb-5">
     <div class="search-bar-container mb-2">
-        <form action="/admin/dienuoc/capnhatgia" method="POST" class="d-flex align-items-center gap-2 price-update-group" onsubmit="showLoading()">
+        <form action="/admin/dienuoc/capnhatgia" method="POST" class="d-flex align-items-center gap-2 price-update-group">
             <label class="fw-bold text-teal mb-0">Giá điện:</label>
             <input type="number" name="giaDien" class="form-control text-center w-auto" 
                 value="{{giadn.GiaDien}}">
@@ -65,7 +68,7 @@
         </form>
     </div>
     <div class="search-bar-container">
-        <form action="/admin/diennuoc" method="get" class="input-group search-box" onsubmit="showLoading()">
+        <form action="/admin/diennuoc" method="get" class="input-group search-box">
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchDN" value="{{search}}">
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
@@ -98,7 +101,7 @@
             </thead>
             <tbody>
                 {{#each dsdn}}
-                <tr>
+                <tr id="dn-{{this.MaCS}}">
                     <td>{{this.TenPhong}}</td>
                     <td>{{this.SoDCu}}</td>
                     <td>{{this.SoDMoi}}</td>
@@ -146,7 +149,7 @@
                 </div>
             </div>
             {{else}}
-            <form action="/admin/diennuoc" method="POST" id="formWizard" onsubmit="showLoading()">
+            <form action="/admin/diennuoc" method="POST" id="formWizard">
                 
                 <input type="hidden" name="dataJson" id="dataJsonHidden">
 
@@ -206,7 +209,7 @@ onclick="closeForm('.form-csdn-cover')">
 
         <h3 class="form-csdn-title text-center text-success mb-4">a</h3>
 
-        <form class="form-csdn" action="/admin/diennuoc" method="POST" onsubmit="showLoading()">
+        <form class="form-csdn" action="/admin/diennuoc" method="POST">
             <div class="mb-3">
                 <label class="form-label">Chỉ số điện củ </label>
                 <input type="text" name="CSDC" class="form-control" readonly>
@@ -249,7 +252,7 @@ onclick="closeForm('.form-csdn-xn-cover')">
         onclick="closeForm('.form-csdn-xn-cover')"></button>
         <h3 class="form-csdn-xn-title text-center text-success mb-4">Xóa Phụ Phí</h3>
 
-        <form class="form-csdn-xn" action="" method="POST" onsubmit="showLoading()">
+        <form class="form-csdn-xn" action="" method="POST">
             <div class="text-center">
                 <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
                 {{!-- Nút hủy xóa --}}

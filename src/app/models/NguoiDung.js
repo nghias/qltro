@@ -73,13 +73,9 @@ class NguoiDung {
         );
         await pool.end();
 
-        // Nếu không tìm thấy user nào
         if (rows.length === 0) return null;
 
-        // Trả về kết quả (chứa MaND và chuỗi hash MatKhau)
-        return rows[0]; 
-        // Lưu ý: Nếu class NguoiDung của bạn yêu cầu full dữ liệu thì dòng trên
-        // nên để là return rows[0] thay vì new NguoiDung(rows[0]) để tránh lỗi thiếu trường.
+        return new NguoiDung(rows[0]); 
     }
 
     static async getById(id) {
@@ -201,25 +197,21 @@ class NguoiDung {
     static async checkExist(field, value, excludeId = null) {
         const pool = await db();
         
-        // 1. Sửa câu SQL: Chỉ lấy cột MaND, thêm LIMIT 1 cho nhanh
         let sql = `SELECT MaND FROM NguoiDung WHERE ${field} = ?`;
         const params = [value];
 
-        // 2. Nếu đang SỬA (có excludeId), trừ người hiện tại ra
         if (excludeId) {
             sql += ` AND MaND != ?`;
             params.push(excludeId);
         }
 
-        // Thêm LIMIT 1 để tìm thấy 1 cái là dừng luôn -> Tối ưu tốc độ
         sql += ` LIMIT 1`;
 
         const [rows] = await pool.query(sql, params);
         await pool.end();
 
-        // 3. Kiểm tra và trả về kết quả
         if (rows.length > 0) {
-            return rows[0].MaND; // Trả về Mã Người Dùng tìm thấy (ví dụ: 5, 10...)
+            return rows[0].MaND; 
         }
         
         return null; // Không tìm thấy thì trả về null
@@ -282,7 +274,7 @@ class NguoiDung {
         const sql = `
             UPDATE NguoiDung
             SET HoTen = ?, CCCD = ?, NamSinh = ?, SDT = ?, ThuongTru = ?,  AVT = ?
-            WHERE MaND = ? AND MatKhau = ?
+            WHERE MaND = ?
         `;
 
         const params = [
@@ -292,8 +284,7 @@ class NguoiDung {
             data.SDT, 
             data.ThuongTru, 
             data.AVT,
-            id,
-            data.MatKhau
+            id
         ];
 
         const [result] = await pool.query(sql, params);

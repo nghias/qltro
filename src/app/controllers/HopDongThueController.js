@@ -183,7 +183,7 @@ class HopDongThueController{
             } else {
                 console.log("Không có người thuê nào được chọn.");
             }
-            return res.redirect('/admin/hopDong?status=them');
+            return res.redirect('/admin/hopDong?status=them&highlight='+hd.MaHDT);
         } catch (error) {
             res.status(500).redirect('/admin/hopDong?status=fail');
         }
@@ -216,7 +216,7 @@ class HopDongThueController{
             } else {
                 console.log("Không có người thuê nào được chọn.");
             }
-            return res.redirect('/admin/hopDong?status=sua');
+            return res.redirect('/admin/hopDong?status=sua&highlight='+id);
         } catch (error) {
             res.status(500).redirect('/admin/hopDong?status=fail');
         }
@@ -235,7 +235,7 @@ class HopDongThueController{
         try {
             const id = req.params.id;
             await HopDongThue.updateKT(id);
-            return res.redirect('/admin/hopDong?status=kthdt');
+            return res.redirect('/admin/hopDong?status=kthdt&highlight='+id);
         } catch (error) {
             res.status(500).redirect('/admin/hopDong?status=fail');
         }

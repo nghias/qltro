@@ -17,8 +17,8 @@ class DienNuocController{
             const dh = await HoaDon.getMaCS(dn.MaCS);
             return {
                 ...dn,
-                TenPhong:phong[0].Ten,
-                isXoa: (phong[0].Ten)?false:true,
+                TenPhong:phong.Ten,
+                isXoa: (phong.Ten)?false:true,
                 isSua: !((dh && dh.length > 0) || false)
             };
         }))
@@ -88,9 +88,9 @@ class DienNuocController{
                     }else{
                         data = {
                             MaPhong: item.MaPhong,
-                            SoDCu: cscu[0].SoDCu,
+                            SoDCu: cscu.SoDCu,
                             SoDMoi: item.SoDMoi,
-                            SoNCu: cscu[0].SoNCu,
+                            SoNCu: cscu.SoNCu,
                             SoNMoi: item.SoNMoi
                         }
                     }
@@ -156,7 +156,7 @@ class DienNuocController{
         try {
             const id = req.params.id;
             const dn=await CSDienNuoc.getByID(id);
-            const parts = (dn[0].NgayGhi).split('/');
+            const parts = (dn.NgayGhi).split('/');
 
             const ngay = `${parts[2]}-${parts[1]}-${parts[0]}`;
             await CSDienNuoc.deleteByNgay(ngay);

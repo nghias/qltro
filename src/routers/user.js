@@ -15,7 +15,7 @@ router.post('/hoadon/xntra/:id', middleWare.isUser , HoaDonController.xnTraHoaDo
 router.get('/hopdong', middleWare.isUser , HopDongThueController.hopDongUser);
 
 router.get('/accupdate/:id', loginController.getAccupdate);
-router.put('/accupdate/:id', upload.single("HinhTT"), loginController.accupdate);
+router.put('/accupdate/:id', upload.single("HinhND"), loginController.accupdate);
 router.post('/mkupdate', loginController.mkupdate);
 
 router.get('/thongbao/laydlsoan', middleWare.isUser, ThongBaoController.layDLSoan);

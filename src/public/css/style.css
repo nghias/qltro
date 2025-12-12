@@ -664,6 +664,11 @@
 }
 .label-text { font-weight: 500; color: #555; }
 .value-text { font-weight: bold; color: #333; text-align: right; }
-/* ------------------------------------ */
-/*              Phong Tro               */
-/* ------------------------------------ */
+
+@keyframes highlightFade {
+    0% { background-color: #ffeeba; } /* Màu nền vàng nhạt */
+    100% { background-color: transparent; }
+}
+.highlight-row {
+    animation: highlightFade 3s ease-out; /* Hiệu ứng chạy trong 3 giây */
+}

@@ -1,10 +1,9 @@
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Lấy tham số 'status' trên thanh địa chỉ
         const urlParams = new URLSearchParams(window.location.search);
         const status = urlParams.get('status');
+        const targetId = urlParams.get('highlight');
 
-        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
         if (status) {
             let title = '';
             let type = 'success';
@@ -39,23 +38,28 @@
                     break;
 
                 default:
-                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
-                    // Không hiện popup, không làm gì cả
                     return; 
             }
 
-            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
             showNotification(type, title,);
-
-            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
-            const newUrl = window.location.pathname;
-            window.history.replaceState(null, null, newUrl);
         }
+        if (targetId) {
+            const row = document.getElementById("hdt-" + targetId);
+            
+            if (row) {
+                row.scrollIntoView({ behavior: "smooth", block: "center" });
+                
+                row.classList.add("highlight-row");
+                
+            }
+        }
+        const newUrl = window.location.pathname;
+        window.history.replaceState(null, null, newUrl);
     });
 </script>
 <div class="contract-card-cover row justify-content-center mb-5">
     <div class="search-bar-container">
-        <form action="/admin/hopdong" method="get" class="input-group search-box" onsubmit="showLoading()">
+        <form action="/admin/hopdong" method="get" class="input-group search-box" >
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" 
             name="searchHDT" value="{{search}}">
@@ -69,7 +73,7 @@
         <h3 class="text-center text-muted">Không có hợp đồng nào trong danh sách!</h3>
     {{else}}
     {{#each dshdt}}
-    <div class="col-11 col-md-9 col-lg-8 mb-4 d-flex justify-content-center">
+    <div class="col-11 col-md-9 col-lg-8 mb-4 d-flex justify-content-center" id="hdt-{{this.MaHDT}}">
         
         <div class="contract-card h-100">
              <h2 class="main-title">Thông Tin Hợp Đồng</h2>
@@ -105,18 +109,18 @@
                     <span class="sub-label">Thông tin phòng:</span>
                 </div>
                 <div class="col-6">
-                    <span class="sub-label">{{this.phong.[0].Ten}}</span>
+                    <span class="sub-label">{{this.phong.Ten}}</span>
                 </div>
             </div>
 
             <div class="row row-item">
                 <div class="col-6 info-text">Diện tích:</div>
-                <div class="col-6 info-value">{{this.phong.[0].DienTich}} m²</div>
+                <div class="col-6 info-value">{{this.phong.DienTich}} m²</div>
             </div>
 
             <div class="row row-item">
                 <div class="col-6 info-text">Giá thuê:</div>
-                <div class="col-6 info-value">{{this.phong.[0].Gia}} VND</div>
+                <div class="col-6 info-value">{{this.phong.Gia}} VND</div>
             </div>
 
             <div class="row row-item">
@@ -164,7 +168,7 @@ onclick="closeForm('.form-hdt-cover')">
 
         <h3 class="form-hdt-title text-center text-success mb-4">a</h3>
 
-        <form class="form-hdt" action="/admin/hopdong" method="POST" onsubmit="showLoading()">
+        <form class="form-hdt" action="/admin/hopdong" method="POST" >
 
             <div class="mb-3">
                 <label class="form-label">Phòng:</label>
@@ -212,7 +216,7 @@ onclick="closeForm('.form-hopdong-xn-cover')">
         onclick="closeForm('.form-hopdong-xn-cover')"></button>
         <h3 class="form-hopdong-xn-title text-center text-success mb-4"> </h3>
 
-        <form class="form-hopdong-xn" action="" method="POST" onsubmit="showLoading()">
+        <form class="form-hopdong-xn" action="" method="POST" >
             <div class="text-center">
                 <button class="btn-xn btn btn-success px-4" type="submit">Đồng ý</button>
                 {{!-- Nút hủy xóa --}}

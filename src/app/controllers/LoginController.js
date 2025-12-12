@@ -1,5 +1,6 @@
 const NguoiDung = require('../models/NguoiDung');
 const bcrypt = require('../config/hash');
+const deleteImage = require('../controllers/DeletePic');
 class LoginContrroller{
     index(req, res) {
         // 1. Hủy session lưu trên server
@@ -62,18 +63,20 @@ class LoginContrroller{
         try {
             const id = req.params.id;
             const curUser = req.session.user.info;
-            let tenFileAnh = req.file ? req.file.filename : req.body.HinhTTCu;
+            let tenFileAnh = req.file ? req.file.filename : req.body.HinhNDCu;
             const data = {
-                HoTen: req.body.HoTenTT,
-                CCCD: req.body.CMNDTT,
-                NamSinh: req.body.NamSinhTT,
-                SDT: req.body.SDTTT,
-                ThuongTru: req.body.ThuongTruTT,
-                AVT: tenFileAnh,
-                MatKhau: curUser.MatKhau,
+                HoTen: req.body.HoTenND,
+                CCCD: req.body.CMNDND,
+                NamSinh: req.body.NamSinhND,
+                SDT: req.body.SDTND,
+                ThuongTru: req.body.ThuongTruND,
+                AVT: tenFileAnh
             };
-            const existSDT = await NguoiDung.checkExist('SDT', req.body.SDTTT);
-            const existCMND = await NguoiDung.checkExist('CCCD', req.body.CMNDTT);
+            
+            console.log(data)
+            
+            const existSDT = await NguoiDung.checkExist('SDT', req.body.SDTND);
+            const existCMND = await NguoiDung.checkExist('CCCD', req.body.CMNDND);
             if (existSDT != null && existSDT != id) {
                 return res.redirect('/'+req.session.user.role+'?status=sdtfail');
             }else if (existCMND != null && existCMND != id) {
@@ -92,8 +95,8 @@ class LoginContrroller{
                     role: req.session.user.role 
                 };
 
-                if(req.file){
-                    deleteImage(tenFileAnh);
+                if(req.file && req.body.HinhNDCu != 'logo.png'){
+                    deleteImage(req.body.HinhNDCu);
                 }
 
                 await NguoiDung.updatefull(id, data);

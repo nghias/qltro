@@ -50,8 +50,8 @@ class PhongTroContrroller{
             Hinh: tenFileAnh
         };
         
-        await Phong.create(data);
-        return res.redirect('/admin/phongTro?status=them');
+        const newPhong = await Phong.create(data);
+        return res.redirect('/admin/phongTro?status=them&highlight='+newPhong.MaPhong);
     }
     async suaPhongTro(req, res) {
         const id = req.params.id;
@@ -62,21 +62,20 @@ class PhongTroContrroller{
 
         let tenFileAnh = req.file ? req.file.filename : HinhCu;
 
-        if(req.file){
-            deleteImage(tenFileAnh);
+        if(req.file && HinhCu != 'logo.png'){
+            deleteImage(HinhCu);
         }
 
-        await Phong.update(id, Ten, DienTich, Gia, tenFileAnh);
-        return res.redirect('/admin/phongTro?status=sua');
+        const phong = await Phong.update(id, Ten, DienTich, Gia, tenFileAnh);
+        return res.redirect('/admin/phongTro?status=suap&highlight='+phong.MaPhong);
     }
     async xoaPhongTro(req, res) {
         const id = req.params.id;
         const HinhCu = req.body.HinhXoa;
-        
-        deleteImage(HinhCu);
+        if(HinhCu!='logo.png') deleteImage(HinhCu);
 
         await Phong.delete(id);
-        return res.redirect('/admin/phongTro?status=xoa');
+        return res.redirect('/admin/phongTro?status=xoap');
     }
 }
 module.exports = new PhongTroContrroller

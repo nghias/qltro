@@ -39,7 +39,7 @@ class CSDienNuoc {
             [id]
         );
         await pool.end();
-        return (rows.length === 0)? [] : rows.map(r => new CSDienNuoc(r));
+        return (rows.length === 0)? [] : new CSDienNuoc(rows[0]);
     }
     static async getByMaPhong(id) {
         const pool = await db();
@@ -59,7 +59,7 @@ class CSDienNuoc {
             [id]
         );
         await pool.end();
-        return (rows.length === 0)? [] : rows.map(r => new CSDienNuoc(r));
+        return (rows.length === 0)? [] : new CSDienNuoc(rows[0]);
     }
     static async findByKeyword(keyword) {
         const pool = await db();

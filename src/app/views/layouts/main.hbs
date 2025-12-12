@@ -13,7 +13,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // 1. Lấy tham số 'status' trên thanh địa chỉ
             const urlParams = new URLSearchParams(window.location.search);
             const status = urlParams.get('status');
 
@@ -38,15 +37,11 @@
                         break;
 
                     default:
-                        // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
-                        // Không hiện popup, không làm gì cả
                         return; 
                 }
 
-                // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
                 showNotification(type, title,);
 
-                // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
                 const newUrl = window.location.pathname;
                 window.history.replaceState(null, null, newUrl);
             }
@@ -59,84 +54,104 @@
 
     {{> footer}}
 
-    {{!-- Form thông tin người dùng --}}
-    <div 
-    class="form-thongtin-cover form-cover z-3 fixed-top d-none justify-content-center align-items-center" 
-    onclick="closeForm('.form-thongtin-cover')">
-        <div class="p-3 rounded-2 w-auto h-auto position-relative" 
+    {{!-- Thêm --}}
+    {{!-- Sửa --}}
+    <div class="form-nguoidung-cover form-cover z-3 fixed-top d-none justify-content-center" 
+    onclick="closeForm('.form-nguoidung-cover')">
+        <div class="p-3 rounded-2 w-auto position-relative" 
         onclick="event.stopPropagation()" 
-        style=" background-color: #E8E8E8; min-width: 400px; ">
+        style=" background-color: #E8E8E8; min-width: 400px; height: fit-content;">
             
             {{!-- Nút đóng form --}}
             <button class="btn btn-close position-absolute top-0 end-0 m-0 me-1 mt-1 btn-danger fw-bolder"
-            onclick="closeForm('.form-thongtin-cover')"></button>
+            onclick="closeForm('.form-nguoidung-cover')"></button>
 
-            <h3 class="form-thongtin-title text-center text-success mb-4">Thông Tin Tài Khoản</h3>
+            <h3 class="form-nguoidung-title text-center text-success mb-4">a</h3>
 
-            <form class="form-thongtin" action="/{{role}}/accupdate/{{info.MaND}}" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
-                <input type="hidden" name="HinhTTCu">
+            <form class="form-nguoidung" action="/admin/nguoidung" method="POST" enctype="multipart/form-data" >
+                <input type="hidden" name="HinhNDCu">
 
                 <div class="d-flex">
                     <div class="d-flex justify-content-center align-items-center">
-                        <img src="" height="230" width="150" class="AVTTT border rounded-3"
+                        <img src="/img/logo.png" height="230" width="150" class="AVTND border rounded-3"
                         style="object-fit: cover; object-position: center;" alt="Ảnh đại diện">
                         </div>
                     <div class="ms-2 w-100">
                         <div class="mb-3">
                             <label class="form-label">Họ tên:</label>
-                            <input type="text" name="HoTenTT" class="form-control">
-                            <small class="text-danger d-none" id="HoTenTTError">a</small>
+                            <input type="text" name="HoTenND" class="form-control" placeholder="Nhập họ tên">
+                            <small class="text-danger d-none" id="HoTenNDError">a</small>
                         </div>
                         <div class="mb-3">
-                            <label class="form-label">CCCD:</label>
-                            <input type="text" name="CMNDTT" class="form-control">
-                            <small class="text-danger d-none" id="CMNDTTError">a</small>
+                            <label class="form-label">CMND:</label>
+                            <input type="text" name="CMNDND" class="form-control" placeholder="Nhập căn cước công dân">
+                            <small class="text-danger d-none" id="CMNDNDError">a</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Năm sinh:</label>
-                            <input type="date" name="NamSinhTT" class="form-control">
-                            <small class="text-danger d-none" id="NamSinhTTError">a</small>
+                            <input type="date" name="NamSinhND" class="form-control" placeholder="Chọn năm sinh">
+                            <small class="text-danger d-none" id="NamSinhNDError">a</small>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">SDT:</label>
-                            <input type="text" name="SDTTT" class="form-control">
-                            <small class="text-danger d-none" id="SDTTTError">a</small>
+                            <input type="text" name="SDTND" class="form-control" placeholder="Nhập số điện thoại">
+                            <small class="text-danger d-none" id="SDTNDError">a</small>
                         </div>
                     </div>
                 </div>
                 <div class="mb-3">
-                    <label class="form-label">Địa chỉ liên hệ:</label>
-                    <div class="row g-2">
-                        <div class="col-12">
-                            <input type="text" id="street" class="form-control" placeholder="Số nhà, tên đường..." oninput="updateAddressString()">
+                        <label class="form-label">Địa chỉ liên hệ:</label>
+                        <div class="row g-2">
+                            <div class="col-12">
+                                <input type="text" id="street" class="form-control" placeholder="Số nhà, tên đường..." oninput="updateAddressString()">
+                            </div>
+                            <div class="col-12">
+                                <select class="form-select" id="province" onchange="updateAddressString()">
+                                    <option value="">-- Chọn Tỉnh/Thành phố --</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <select class="form-select" id="district" disabled onchange="updateAddressString()">
+                                    <option value="">-- Chọn Quận/Huyện --</option>
+                                </select>
+                            </div>
+                            <div class="col-6">
+                                <select class="form-select" id="ward" disabled onchange="updateAddressString()">
+                                    <option value="">-- Chọn Phường/Xã --</option>
+                                </select>
+                            </div>
                         </div>
-                        <div class="col-12">
-                            <select class="form-select" id="province" onchange="updateAddressString()">
-                                <option value="">-- Chọn Tỉnh/Thành phố --</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <select class="form-select" id="district" disabled onchange="updateAddressString()">
-                                <option value="">-- Chọn Quận/Huyện --</option>
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <select class="form-select" id="ward" disabled onchange="updateAddressString()">
-                                <option value="">-- Chọn Phường/Xã --</option>
-                            </select>
-                        </div>
+                        <input type="text" name="ThuongTruND" class="form-control mt-3" placeholder="Nhập địa chỉ thường trú" readonly id="fullAddress">
+                        <small class="text-danger d-none" id="ThuongTruNDError">a</small>
                     </div>
-
-                    <input type="text" name="ThuongTruTT" class="form-control mt-3" readonly id="fullAddress">
-                    <small class="text-danger d-none" id="ThuongTruTTError">Vui lòng nhập đầy đủ địa chỉ</small>
-                </div>
                 <div class="mb-3">
                     <label class="form-label">Ảnh người dùng:</label>
-                    <input type="file" name="HinhTT" class="form-control" placeholder="Chọn ảnh"  onchange="xemThuAnh(this)">
-                    <small class="text-danger d-none" id="HinhTTError">Hãy chọn 1 ảnh</small>
+                    <input type="file" name="HinhND" class="form-control" placeholder="Chọn ảnh"  onchange="xemThuAnh(this,'.AVTND')">
+                    <small class="text-danger d-none" id="HinhNDError">Hãy chọn 1 ảnh</small>
+                </div>
+                <div class="mb-3 vaiTro">
+                    <label class="form-label">Vai trò:</label>
+                    <select class="form-select" name="QuyenND">
+                        <option value="">Chọn vai trò</option>
+                        <option value="admin">Chủ trọ</option>
+                        <option value="user">Người thuê</option>
+                    </select>
                 </div>
                 <div class="text-center">
-                    <button class="btn btn-success px-4" type="submit">Lưu Thông Tin</button>
+                    <button class="btn btn-success px-4" name="btnLuuND" value="1" type="submit">Lưu Thông Tin</button>
+                    {{!-- Đặt lại mật khẩu --}}
+                    <button class="btn btn-delete px-4 btnDatLaiMK" name="btnDatLaiMK"
+                    type="button"
+                    data-id=""
+                    style="width: auto; margin-left: 10px;"
+                    onclick="DLMKNguoiDung(this)">Đặt lại mật khẩu</button>
+                    {{!-- Xóa --}}
+                    <button type="button"
+                    class="btn btn-danger px-4 btnXoaND" name="btnXoaND" 
+                    data-id=""
+                    data-hinh=""
+                    style="width: auto; margin-left: 10px;" 
+                    onclick="XoaNguoiDung(this)">Xóa</button>
                 </div>
             </form>
         </div>
@@ -156,7 +171,7 @@
 
             <h3 class="form-doimk-title text-center text-success mb-4">Đổi Mật Khẩu</h3>
 
-            <form class="form-doimk" action="/{{role}}/mkupdate" method="POST" onsubmit="showLoading()">
+            <form class="form-doimk" action="/{{role}}/mkupdate" method="POST" >
                 <input type="hidden" name="MaNDCMK" value="{{info.MaND}}">
                 <div class="mb-3">
                     <label class="form-label">Mật khẩu cũ:</label>
@@ -217,25 +232,22 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script src="/js/main.min.js"></script>
     <script src="/js/security.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 </body>
     <script>
-        (function() {
-            function killLoading() {
-                var loader = document.getElementById('loading-overlay');
-                if (loader) {
-                    loader.style.display = 'none';
-                    loader.style.visibility = 'hidden';
-                    loader.style.opacity = '0';
-                }
-                document.body.style.overflow = 'auto';
+        function killLoading() {
+            var loader = document.getElementById('loading-overlay');
+            if (loader) {
+                loader.style.display = 'none';
+                loader.style.visibility = 'hidden';
+                loader.style.opacity = '0';
             }
-            killLoading();
-            window.addEventListener('pageshow', function(event) {
-                killLoading();
-            });
-        })();
+            document.body.style.overflow = 'auto';
+        }
+        window.addEventListener('pageshow', function(event) {
+            if (event.persisted){killLoading();}
+        });
     </script>
 </html>

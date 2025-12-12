@@ -1,6 +1,6 @@
 <div class="container mt-4" style="margin-top: 60px !important;">
     <div class="search-bar-container">
-        <form action="/admin/phuphi" method="get" class="input-group search-box" onsubmit="showLoading()">
+        <form action="/admin/phuphi" method="get" class="input-group search-box">
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="searchPP" value="{{search}}">
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
@@ -10,7 +10,7 @@
     </div>
     <div class="card shadow-sm border-0" style="min-height: 600px;">
         
-        <form action="" method="POST" class="card-header bg-white border-bottom py-2 px-3 d-flex align-items-center" onsubmit="showLoading()">
+        <form action="" method="POST" class="card-header bg-white border-bottom py-2 px-3 d-flex align-items-center">
             <a href="/{{role}}/thongbao/{{ma}}" class="btn btn-light btn-sm me-3" title="Quay lại">
                 <i class="fas fa-arrow-left"></i>
             </a>
@@ -104,7 +104,7 @@ onclick="closeForm('.form-thongbao-traloi-cover')">
 
         <h3 class="form-thongbao-traloi-title text-center text-success mb-4">Trả lời thư</h3>
 
-        <form class="form-thongbao-traloi" action="" method="POST" onsubmit="showLoading()">
+        <form class="form-thongbao-traloi" action="" method="POST">
             <input type="hidden" name="MaNN" class="form-control">
             <div class="mb-3">
                 <label class="form-label">Tiêu đề:</label>

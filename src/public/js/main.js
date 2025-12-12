@@ -392,12 +392,11 @@ async function SuaPhongTro(id) {
             return;
         }
 
-        const data = await response.json(); 
-        console.log("Dữ liệu nhận được:", data);
+        const data = await response.json();
 
         const ten = data.Ten;
         const dt = data.DienTich;
-        const giaCoDau = data.Gia; // ví dụ: "11.231.444"
+        const giaCoDau = data.Gia;
         const gia = giaCoDau.replace(/\./g, "");
         const hinh = data.HinhAnh;
 
@@ -544,9 +543,7 @@ async function SuaNguoiDung(id) {
         }
 
         const data = await response.json(); 
-        console.log("Dữ liệu nhận được:", data);
 
-        document.getElementsByName("MaND")[0].value = data.MaND;
         document.getElementsByName("HoTenND")[0].value = data.HoTen;
         document.getElementsByName("CMNDND")[0].value = data.CCCD;
         document.getElementsByName("NamSinhND")[0].value = formatDateToInput(data.NamSinh);
@@ -646,12 +643,12 @@ if(formNguoiDung) {
             hasError = true;
         }
 
-        if (sdt === "" || !/^\d{12}$/.test(sđt)) {
+        if (sdt === "" || !/^\d{10}$/.test(sdt)) {
             showErr(sdtInput, document.querySelector("#SDTNDError"), "SĐT không hợp lệ");
             hasError = true;
         }
 
-        if (tt === "" || !regex.test(tt) || !checkValidAddress(tt)) {
+        if (tt === "" || !checkValidAddress(tt)) {
             showErr(ttInput, document.querySelector("#ThuongTruNDError"), "Địa chỉ không hợp lệ");
             hasError = true;
         }
@@ -666,7 +663,9 @@ if(formNguoiDung) {
             hinhInput.value = "";
         }
 
-        const eighteenYearsAgo = new Date();
+        const today = new Date();
+
+        const eighteenYearsAgo = new Date(today);
         eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
 
         if (typeof formatDateToInput === "function") {
@@ -705,106 +704,31 @@ async function CapNhatThongTin(id, role) {
 
         const data = await response.json(); 
 
-        document.getElementsByName("HoTenTT")[0].value = data.HoTen;
-        document.getElementsByName("CMNDTT")[0].value = data.CCCD;
-        document.getElementsByName("NamSinhTT")[0].value = formatDateToInput(data.NamSinh);
-        document.getElementsByName("SDTTT")[0].value = data.SDT;
-        document.getElementsByName("ThuongTruTT")[0].value = data.ThuongTru;
+        document.getElementsByName("MaND")[0].value = data.MaND;
+        document.getElementsByName("HoTenND")[0].value = data.HoTen;
+        document.getElementsByName("CMNDND")[0].value = data.CCCD;
+        document.getElementsByName("NamSinhND")[0].value = formatDateToInput(data.NamSinh);
+        document.getElementsByName("SDTND")[0].value = data.SDT;
+        document.getElementsByName("ThuongTruND")[0].value = data.ThuongTru;
         document.getElementById("street").value = (data.ThuongTru).split(',')[0].trim();
-        document.getElementsByName("HinhTTCu")[0].value = data.AVT;
+        document.getElementsByName("QuyenND")[0].value = "";
+        document.getElementsByName("HinhNDCu")[0].value = data.AVT;
         
         // Xử lý ảnh (nếu có)
         if(data.AVT) {
-            document.querySelector('.AVTTT').src = '/img/'+data.AVT;
+            document.querySelector('.AVTND').src = '/img/'+data.AVT;
         }
 
-        openForm('.form-thongtin-cover');
-        document.querySelector('.form-thongtin-title').innerText = "Thông Tin Người Dùng";
-        document.querySelector('.form-thongtin').action=`/${role}/accupdate/${id}?_method=PUT`;
+        openForm('.form-nguoidung-cover');
+        document.querySelector('.form-nguoidung-title').innerText = "Thông Tin Người Dùng";
+        document.querySelector('.form-nguoidung').action=`/${role}/accupdate/${id}?_method=PUT`;
+
+        close('.vaiTro');
+        close('.btnDatLaiMK');
+        close('.btnXoaND');
     } catch (err) {
         console.error("Lỗi:", err);
     }
-}
-
-validaChu('HoTenTT','#HoTenTTError', "Họ và tên");
-validaSoLimit('CMNDTT','#CMNDTTError',12,"CMND");
-validaSoLimit('SDTTT','#SDTTTError', 10,"Số điện thoại");
-validaRong('ThuongTruTT', 'ThuongTruTTError', 'Địa chỉ thường trú');
-vaidaAnh('HinhTT','#HinhTTError',0);
-
-const formThongTin = document.querySelector('.form-thongtin');
-
-if(formThongTin){
-    formThongTin.addEventListener("submit", function (e) {
-
-        let hasError = false;
-
-        // LẤY INPUT (ELEMENT)
-        const hoTenInput = document.getElementsByName("HoTenTT")[0];
-        const cmndInput = document.getElementsByName("CMNDTT")[0];
-        const sdtInput = document.getElementsByName("SDTTT")[0];
-        const ttInput  = document.getElementsByName("ThuongTruTT")[0];
-        const hinhInput = document.getElementsByName("HinhTT")[0];
-
-        const hoTen = hoTenInput.value.trim();
-        const cmnd = cmndInput.value.trim();
-        const sdt = sdtInput.value.trim();
-        const tt = ttInput.value.trim();
-
-        let regex = /^[\p{L}\s]+$/u;
-        if (hoTen === "" || !regex.test(hoTen)) {
-            showErr(hoTenInput, document.querySelector("#HoTenTTError"), "Họ tên không hợp lệ");
-            hasError = true;
-        }
-
-        if (cmnd === "" || !/^\d{12}$/.test(cmnd)) {
-            showErr(cmndInput, document.querySelector("#CMNDTTError"), "CMND không hợp lệ");
-            hasError = true;
-        }
-
-        if (sdt === "" || !/^\d{12}$/.test(sđt)) {
-            showErr(sdtInput, document.querySelector("#SDTTTError"), "SĐT không hợp lệ");
-            hasError = true;
-        }
-
-        if (tt === "" || !regex.test(tt) || !checkValidAddress(tt)) {
-            showErr(ttInput, document.querySelector("#ThuongTruTTError"), "Địa chỉ không hợp lệ");
-            hasError = true;
-        }
-
-        // KIỂM TRA HÌNH
-        const file = hinhInput.files[0];
-        const validTypes = ["image/jpeg", "image/png", "image/jpg", "image/gif"];
-
-        if (file && !validTypes.includes(file.type)) {
-            showErr(hinhInput, document.querySelector("#HinhTTError"), "File phải là ảnh (jpg, png, jpeg, gif)");
-            hasError = true;
-            hinhInput.value = "";
-        }
-
-        const ngaySinhInput = document.getElementsByName("NamSinhTT")[0];
-        const eighteenYearsAgo = new Date();
-        eighteenYearsAgo.setFullYear(today.getFullYear() - 18);
-
-        if (typeof formatDateToInput === "function") {
-            ngaySinhInput.setAttribute('max', formatDateToInput(eighteenYearsAgo));
-
-            const ngaySinhValue = ngaySinhInput.value;
-            
-            if (ngaySinhValue) { 
-                const birthDate = new Date(ngaySinhValue);
-                if (birthDate > eighteenYearsAgo) {
-                    showErr(ngaySinhInput, document.querySelector("#NamSinhTTError"), "Năm sinh phải đủ 18 tuổi trở lên.");
-                    hasError = true;
-                }
-            }
-        }
-
-        // NGĂN SUBMIT
-        if (hasError) {
-            e.preventDefault();
-        }
-    });
 }
 
 // Hàm xử lý ẩn hiện password
@@ -1346,8 +1270,8 @@ function TaoFormChiSo() {
 
         const data = await response.json(); 
 
-        const SoDCu = Number((data.cs[0].SoDCu).replace(/\./g, ''));
-        const SoNCu = Number((data.cs[0].SoNCu).replace(/\./g, ''));
+        const SoDCu = Number((data.cs.SoDCu).replace(/\./g, ''));
+        const SoNCu = Number((data.cs.SoNCu).replace(/\./g, ''));
 
         if(!dien) {
             showErr(dienInput,dienErr, 'Vui lòng nhập chỉ số điện')
@@ -1356,7 +1280,7 @@ function TaoFormChiSo() {
             hideErr(dienInput,dienErr);
         }
         if(Number(dien)<=SoDCu) {
-            showErr(dienInput,dienErr, `Chỉ số điện mới phải lớn hơn ${data.cs[0].SoDCu}`)
+            showErr(dienInput,dienErr, `Chỉ số điện mới phải lớn hơn ${data.cs.SoDCu}`)
             return;
         }else{
             hideErr(dienInput,dienErr);
@@ -1368,7 +1292,7 @@ function TaoFormChiSo() {
             hideErr(nuocInput,nuocErr);
         }
         if(Number(nuoc)<=SoNCu) {
-            showErr(nuocInput,nuocErr, `Chỉ số nước phải lớn hơn ${data.cs[0].SoNCu}`)
+            showErr(nuocInput,nuocErr, `Chỉ số nước phải lớn hơn ${data.cs.SoNCu}`)
             return;
         }else{
             hideErr(nuocInput,nuocErr);
@@ -1429,11 +1353,11 @@ async function SuaCSDN(id) {
 
         const data = await response.json(); 
 
-        document.getElementsByName("CSDC")[0].value = data.cs[0].SoDCu;
-        document.getElementsByName("CSNC")[0].value = data.cs[0].SoDCu;
+        document.getElementsByName("CSDC")[0].value = data.cs.SoDCu;
+        document.getElementsByName("CSNC")[0].value = data.cs.SoDCu;
 
-        document.getElementsByName("CSDM")[0].value = data.cs[0].SoDMoi;
-        document.getElementsByName("CSNM")[0].value = data.cs[0].SoDMoi;
+        document.getElementsByName("CSDM")[0].value = data.cs.SoDMoi;
+        document.getElementsByName("CSNM")[0].value = data.cs.SoDMoi;
 
         openForm('.form-csdn-cover');
         document.querySelector('.form-csdn-title').innerText = "Sửa Chỉ số";
@@ -1757,13 +1681,14 @@ if(formTLTB) {
     });
 }
 
-// Hàm BẬT màn hình loading
+// -------------------------------------
+//              Loading
+// -------------------------------------
 function showLoading() {
     document.getElementById('loading-overlay').style.display = 'flex';
     document.body.style.overflow = "hidden";
 }
 
-// Hàm TẮT màn hình loading
 function hideLoading() {
     const loader = document.getElementById('loading-overlay');
     if (loader) {
@@ -1776,25 +1701,8 @@ window.addEventListener('load', function() {
     hideLoading();
 });
 
-// Sửa lại đoạn logic click thẻ a một chút
-links.forEach(link => {
-    link.addEventListener('click', function(event) {
-        const href = this.getAttribute('href');
-        const target = this.getAttribute('target');
-        
-        if (href && href !== '#' && !href.startsWith('javascript') && target !== '_blank') {
-            
-            if (href.match(/\.(zip|rar|doc|docx|xls|xlsx|pdf|png|jpg)$/i)) {
-                 return; 
-            }
-
-            showLoading();
-
-            setTimeout(function() {
-                hideLoading();
-            }, 10000);
-        }
-    });
+window.addEventListener('beforeunload', function () {
+    showLoading();
 });
 // -------------------------------------
 //              API Tỉnh thành

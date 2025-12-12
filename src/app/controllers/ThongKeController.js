@@ -1,15 +1,6 @@
-const deleteImage = require('./DeletePic');
 const Phong = require('../models/Phong');
 const NguoiDung = require('../models/NguoiDung');
-const HopDongThue = require('../models/HopDongThue');
-const CTHopDong = require('../models/CTHopDong');
-const CTPhuPhi = require('../models/CTPhuPhi');
 const HoaDon = require("../models/HoaDon");
-const PhuPhi = require("../models/PhuPhi");
-const GiaDienNuoc = require("../models/GiaDienNuoc");
-const CSDienNuoc = require("../models/CSDienNuoc");
-const {DateFormatter} = require('../config/DataFormatter');
-const { hoaDonAdmin } = require('./HoaDonController');
 
 
 class ThongKeController{

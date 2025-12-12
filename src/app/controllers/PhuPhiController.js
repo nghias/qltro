@@ -94,7 +94,7 @@ class PhuPhiController{
             } else {
                 console.log("Không có phòng nào được chọn.");
             }
-            return res.redirect('/admin/phuphi?status=them');
+            return res.redirect('/admin/phuphi?status=them&highlight='+pp.MaPP);
         } catch (error) {
             res.status(500).redirect('/admin/phuphi?status=fail');
         }
@@ -126,7 +126,7 @@ class PhuPhiController{
             } else {
                 console.log("Không có phòng nào được chọn.");
             }
-            return res.redirect('/admin/phuphi?status=sua');
+            return res.redirect('/admin/phuphi?status=sua&highlight='+id);
         } catch (error) {
             console.log(error)
             res.status(500).redirect('/admin/phuphi?status=fail');

@@ -120,7 +120,7 @@ class HoaDon {
         const [rows] = await pool.query("SELECT * FROM HoaDon WHERE MaCS = ? LIMIT 1",[id]);
         await pool.end();
 
-        return (rows.length === 0)? [] : rows.map(r => new HoaDon(r));
+        return (rows.length === 0)? [] : new HoaDon(rows[0]);
     }
     static async create(data) {
         const pool = await db();

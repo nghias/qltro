@@ -38,7 +38,7 @@ class Phong {
         );
         await pool.end();
 
-        return (rows.length === 0)? [] : rows.map(row => new Phong(row));
+        return (rows.length === 0)? [] : new Phong(rows[0]);
     }
     // ----------- Lấy user theo tên phòng -----------
     static async getById(id) {
@@ -50,7 +50,7 @@ class Phong {
         );
         await pool.end();
 
-        return (rows.length === 0)? [] : rows.map(row => new Phong(row));
+        return (rows.length === 0)? [] : new Phong(rows[0]);
     }
     static async getByMaHDT(id) {
         const pool = await db();
@@ -63,7 +63,7 @@ class Phong {
         );
         await pool.end();
 
-        return (rows.length === 0)? [] : rows.map(row => new Phong(row));
+        return (rows.length === 0)? [] : new Phong(rows[0]);
     }
     static async getByMaND(id) {
         const pool = await db();
@@ -77,7 +77,7 @@ class Phong {
         );
         await pool.end();
 
-        return (rows.length === 0)? [] : rows.map(row => new Phong(row));
+        return (rows.length === 0)? [] : new Phong(rows[0]);
     }
     static async getByMaPP(id) {
         const pool = await db();
@@ -122,7 +122,7 @@ class Phong {
         );
         await pool.end();
 
-        return (rows.length === 0)? [] : rows.map(row => new Phong(row));
+        return (rows.length === 0)? [] : new Phong(rows[0]);
     }
     // ----------- Tìm kiếm phòng -----------
     static async findByKeyword(search) {

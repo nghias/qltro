@@ -1,47 +1,50 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // 1. Lấy tham số 'status' trên thanh địa chỉ
         const urlParams = new URLSearchParams(window.location.search);
         const status = urlParams.get('status');
+        const targetId = urlParams.get('highlight')
 
-        // 2. Kiểm tra: Chỉ chạy nếu status có giá trị
         if (status) {
             let title = '';
-            let type = 'success'; // Mặc định là màu xanh
+            let type = 'success'; 
 
-            // 3. Phân loại 3 trường hợp cụ thể
             switch (status) {
                 case 'them':
                     title = 'Đã thêm thành công!';
                     break;
                 
-                case 'sua':
+                case 'suap':
                     title = 'Đã sửa thành công!';
                     break;
 
-                case 'xoa':
+                case 'xoap':
                     title = 'Đã xóa thành công!';
                     break;
 
-                case 'error': // (Tùy chọn) Nếu muốn báo lỗi
+                case 'error': 
                     title = 'Lỗi';
                     type = 'failure';;
                     break;
 
                 default:
-                    // NẾU KHÔNG PHẢI CÁC TRƯỜNG HỢP TRÊN -> DỪNG (RETURN)
-                    // Không hiện popup, không làm gì cả
                     return; 
             }
 
-            // 4. Hiện Popup (Chỉ chạy khi code không bị return ở trên)
             showNotification(type, title,);
-
-            // 5. Dọn dẹp URL (Xóa chữ ?status=... để F5 không bị hiện lại)
-            const newUrl = window.location.pathname;
-            window.history.replaceState(null, null, newUrl);
         }
+
+            console.log(status);
+        if (targetId) {
+            const row = document.getElementById("phong-" + targetId);
+            if (row) {
+                row.scrollIntoView({ behavior: "smooth", block: "center" });
+                
+                row.classList.add("highlight-row");
+                
+            }
+        }
+
     });
 </script>
 
@@ -50,7 +53,7 @@
 
     <!-- Thanh tìm kiếm -->
     <div class="d-flex gap-3 mb-4 justify-content-center">
-        <form action="/admin/phongtro" method="get" class="input-group search-box" onsubmit="showLoading()">
+        <form action="/admin/phongtro" method="get" class="input-group search-box" >
             <span class="input-group-text bg-white"><i class="fa-solid fa-magnifying-glass"></i></span>
             <input type="text" class="form-control" placeholder="Nhập nội dung cần tìm" name="search" value="{{search}}">
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
@@ -64,7 +67,7 @@
         <h3 class="text-center text-muted">Không có phòng nào trong danh sách!</h3>
     {{else}}
         {{#each dsPhong}}
-            <div class="card card-room mb-4">
+            <div class="card card-room mb-4" id="phong-{{this.MaPhong}}">
                 <div class="card-header room-header">{{this.Ten}}</div>
 
                 <div class="card-body p-0">
@@ -114,7 +117,7 @@ onclick="closeForm('.form-phong-cover')">
 
         <h3 class="form-phong-title text-center text-success mb-4">Sửa Phòng</h3>
 
-        <form class="form-phong" action="/admin/phongtro" method="POST" enctype="multipart/form-data" onsubmit="showLoading()">
+        <form class="form-phong" action="/admin/phongtro" method="POST" enctype="multipart/form-data" >
             <input type="hidden" name="HinhCu">
 
             <div class="mb-3">
@@ -143,7 +146,7 @@ onclick="closeForm('.form-phong-cover')">
             </div>
             <div class="mb-3">
                 <label class="form-label">Ảnh phòng:</label>
-                <input type="file" name="Hinh" class="form-control" 
+                <input type="file" name="HinhPhong" class="form-control" 
                     placeholder="Chọn ảnh"
                     onchange="xemThuAnh(this,'.AnhPhongTest')"
                 >
@@ -162,14 +165,14 @@ onclick="closeForm('.form-phong-cover')">
                         </div>
                         <div class="col-md-5 p-3">
                             <h5 class="title-info h3">Thông tin phòng</h5>
-                            <p class="h4  d-inline">Diện tích: <p class="DienTichTest h4  d-inline"></p><p class="h4 d-inline">m²</p></p>
-                            <p class="h4  d-inline">Giá: <p class="GiaTest h4  d-inline"></p><p class="h4 d-inline">VND</p></p>
+                            <div class="h4 text-nowrap">
+                                Diện tích: <span class="DienTichTest h4  d-inline"></span>m²
+                            </div>
+                            <div class="h4 text-nowrap">
+                                Giá: <span class="GiaTest"></span> VND
+                            </div>
                         </div>
                         <div class="col-md-3 room-right">
-                            <p class="status text-muted"><span class="text-success h5 mb-0">●</span> Trống</p>
-
-                            <button type="button" class="btn btn-edit">Sửa</button>
-                            <button type="button" class="btn btn-delete">Xóa</button>
                         </div>
                     </div>
                 </div>
@@ -192,7 +195,7 @@ onclick="closeForm('.form-phong-xoa-cover')">
         onclick="closeForm('.form-phong-xoa-cover')"></button>
         <h3 class="text-center text-success mb-4">Xóa Phòng</h3>
 
-        <form class="form-phong-xoa" action="/admin/phongtro" method="POST" onsubmit="showLoading()">
+        <form class="form-phong-xoa" action="/admin/phongtro" method="POST" >
             <input type="hidden" name="HinhXoa">
             <div class="text-center">
                 <button class="btn-xoa btn btn-success px-4" type="submit">Đồng ý</button>
