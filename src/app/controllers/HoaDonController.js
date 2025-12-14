@@ -26,9 +26,9 @@ class HoaDonController{
         const MaND = req.session.user.info.MaND;
         const dsHoaDon = await HoaDon.getByMaND(MaND);
         if (!dsHoaDon || dsHoaDon.length === 0) {
-            return res.render("pages/user/hoadon", { empty: true });
+            return res.render("pages/user/hoaDon", { empty: true });
         }
-        res.render('pages/user/hoadon', {
+        res.render('pages/user/hoaDon', {
             dsHoaDon
         });
     }

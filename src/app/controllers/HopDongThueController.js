@@ -67,7 +67,7 @@ class HopDongThueController{
             };
         }));
         if (!dshdt || dshdt.length === 0) {
-            return res.render("pages/user/hoadon", { empty: true });
+            return res.render("pages/user/hopDong", { empty: true });
         }
         res.render('pages/user/hopDong', {
             dshdt
