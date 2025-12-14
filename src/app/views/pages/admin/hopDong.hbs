@@ -9,11 +9,11 @@
             let type = 'success';
             
             switch (status) {
-                case 'them':
+                case 'themhdt':
                     title = 'Đã thêm thành công!';
                     break;
                 
-                case 'sua':
+                case 'suahdt':
                     title = 'Đã sửa thành công!';
                     break;
 
@@ -56,6 +56,15 @@
         const newUrl = window.location.pathname;
         window.history.replaceState(null, null, newUrl);
     });
+    function formatDateToDDMMYYYY(d) {
+        const date = new Date(d);
+        const year = date.getFullYear();
+        // Tháng bắt đầu từ 0 nên phải +1, padStart(2, '0') để thêm số 0 đằng trước nếu < 10
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        return `${day}-${month}-${year}`;
+    }
 </script>
 <div class="contract-card-cover row justify-content-center mb-5">
     <div class="search-bar-container">
@@ -81,11 +90,11 @@
             <div class="row mb-4">
                 <div class="col-md-6 col-12">
                     <span class="sub-label d-inline">Ngày bắt đầu:</span>
-                    <span class="info-value fw-bold ms-2">{{this.NgayBD}}</span>
+                    <span class="info-value fw-bold ms-2" ><script>document.write(formatDateToDDMMYYYY('{{this.NgayBD}}'));</script></span>
                 </div>
                 <div class="col-md-6 col-12">
                     <span class="sub-label d-inline">Ngày kết thúc:</span>
-                    <span class="info-value fw-bold ms-2">{{this.NgayKT}}</span>
+                    <span class="info-value fw-bold ms-2"><script>document.write(formatDateToDDMMYYYY('{{this.NgayKT}}'));</script></span>
                 </div>
             </div>
 
@@ -199,13 +208,13 @@ onclick="closeForm('.form-hdt-cover')">
                  <small class="text-danger d-none" id="NThueError">a</small>
             </div>
             <div class="text-center">
-                <button class="btn btn-success px-4" name="btnLuuHDT" value="1" type="submit">Tạo hợp đồng</button>
+                <button class="btn btn-success px-4" name="btnLuuHDT" value="1" type="submit">Lưu hợp đồng</button>
             </div>
         </form>
     </div>
 </div>
 {{!-- Xóa --}}
-<div class="form-hopdong-xn-cover form-cover z-3 fixed-top d-none justify-content-center align-items-center" 
+<div class="form-hopdong-xn-cover form-cover z-4 fixed-top d-none justify-content-center align-items-center" 
 onclick="closeForm('.form-hopdong-xn-cover')">
     <div class="p-3 rounded-2 w-auto h-auto position-relative" 
     onclick="event.stopPropagation()" 

@@ -16,7 +16,7 @@
                     title = 'Đã cập nhật giá thành công!';
                     break;
                 
-                case 'sua':
+                case 'suadn':
                     title = 'Đã sửa thành công!';
                     break;
 
@@ -40,7 +40,7 @@
             showNotification(type, title,);
         }
         if (targetId) {
-            const row = document.getElementById("nguoidung-" + targetId);
+            const row = document.getElementById("dn-" + targetId);
             
             if (row) {
                 row.scrollIntoView({ behavior: "smooth", block: "center" });
@@ -230,12 +230,6 @@ onclick="closeForm('.form-csdn-cover')">
             </div>
             <div class="text-center">
                 <button class="btn btn-success px-4" name="btnLuuCS" value="1" type="submit">Lưu chỉ số</button>
-                {{!-- Xóa --}}
-                <button type="button"
-                class="btn btn-danger px-4 btnXoaPP" name="btnXoaPP" 
-                data-id=""
-                style="width: auto; margin-left: 10px;" 
-                onclick="XoaPhuPhi(this)">Xóa</button>
             </div>
         </form>
     </div>

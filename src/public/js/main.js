@@ -512,10 +512,9 @@ function xemThuAnh(input, pic) {
 async function ThemNguoiDung() {
     try {
         const today = new Date();
-        document.getElementsByName("MaND")[0].value = "";
         document.getElementsByName("HoTenND")[0].value = "";
         document.getElementsByName("CMNDND")[0].value = "";
-        document.getElementsByName("NamSinhND").value = formatDateToInput(today);
+        document.getElementsByName("NamSinhND")[0].value = formatDateToInput(today);
         document.getElementsByName("SDTND")[0].value = "";
         document.getElementsByName("ThuongTruND")[0].value = "";
         document.getElementById("street").value = "";
@@ -916,7 +915,8 @@ async function SuaHopDong(id) {
             // Chèn vào container
             divContainer.insertAdjacentHTML('beforeend', htmlItem);
         });
-
+        console.log(data.HDT)
+        console.log(data.HDT.NgayKT)
         document.getElementsByName("NgayBD")[0].value = formatDateToInput(data.HDT.NgayBD);
         document.getElementsByName("NgayKT")[0].value = formatDateToInput(data.HDT.NgayKT);
         document.getElementsByName("TienCoc")[0].value = data.HDT.TienCoc;
@@ -1145,7 +1145,7 @@ validaSo('GiaPP','#GiaPPError',0,1000000, 'Giá');
 
 const formPhuPhi = document.querySelector('.form-hdt');
 if(formPhuPhi) {
-    fomPhuPhi.addEventListener("submit", function (e) {
+    formPhuPhi.addEventListener("submit", function (e) {
         e.preventDefault();
         
         let hasError = false;
@@ -1153,11 +1153,9 @@ if(formPhuPhi) {
         // --- LẤY INPUT ---
         const tenInput = document.getElementsByName("TenPP")[0];
         const giaInput = document.getElementsByName("GiaPP")[0];
-        const ghichuInput  = document.getElementsByName("GhiChuPP")[0];
 
         const ten = tenInput.value.trim();
         const gia = giaInput.value.trim();
-        const ghichu = ghichuInput.value.trim();
 
         let regex = /^[\p{L}\s]+$/u;
         if (ten === "" || !regex.test(ten)) {
@@ -1167,11 +1165,6 @@ if(formPhuPhi) {
 
         if (gia === "" || Number(gia) < 0 || Number(gia) > 10000000) {
             showErr(giaInput, document.querySelector("#GiaPPError"), "Giá phụ phí không hợp lệ");
-            hasError = true;
-        }
-
-        if (ghichu === "" || !regex.test(ghichu)) {
-            showErr(ghichuInput, document.querySelector("#GhiChuPPError"), "Ghi chú không hợp lệ");
             hasError = true;
         }
 
@@ -1378,7 +1371,38 @@ function XoaCSDNByNgay(id) {
     document.querySelector('.form-csdn-xn-title').innerText="Bạn có muốn xóa chỉ số này không"
     document.querySelector('.form-csdn-xn').action=`/admin/diennuoc/xoatheongay/${id}?_method=DELETE`;
 }
+const formSuaDN = document.querySelector('.form-csdn');
+if(formSuaDN) {
+    formSuaDN.addEventListener("submit", function (e) {
+        e.preventDefault();
+        
+        let hasError = false;
 
+        // --- LẤY INPUT ---
+        const csdcInput = document.getElementsByName("CSDC")[0];
+        const csncInput = document.getElementsByName("CSNC")[0];
+        const csdmInput = document.getElementsByName("CSDM")[0];
+        const csnmInput = document.getElementsByName("CSNM")[0];
+
+        const csdc = csdcInput.value.trim();
+        const csnc = csncInput.value.trim();
+        const csdm = csdmInput.value.trim();
+        const csnm = csnmInput.value.trim();
+
+        if (csdm === "" || Number(csdc) < Number(csdm)) {
+            showErr(csdmInput, document.querySelector("#CSDMError"), "Chỉ số điện mới phải lớn hơn chỉ số củ");
+            hasError = true;
+        }
+        if (csnm === "" || Number(csnc) < Number(csnm)) {
+            showErr(csnmInput, document.querySelector("#CSNMError"), "Chỉ số nước mới phải lớn hơn chỉ số củ");
+            hasError = true;
+        }
+
+        if (!hasError) {
+             e.currentTarget.submit(); 
+        }
+    });
+}
 // -------------------------------------
 //              Hóa đơn
 // -------------------------------------
@@ -1514,6 +1538,7 @@ function xoaDauVaKhoangTrang(str) {
     return str;
 }
 async function MaQRHD(id) {
+    showLoading();
     const response = await fetch(`/user/hoadon/taocode/${id}`);
     
     if (!response.ok) {
@@ -1521,14 +1546,20 @@ async function MaQRHD(id) {
         return;
     }
 
-    const data = await response.json(); 
+    const data = await response.json();
+    const ndck = id+"-"+xoaDauVaKhoangTrang(data.TenPhong)+"-"+data.NgayTinh;
+    const taomack = `https://img.vietqr.io/image/MB-0000103828964-compact.png?amount=${data.TienTT}&addInfo=${ndck}`;
 
     const noidungck = document.querySelector('.noidungck');
+    const maqrck = document.querySelector('.maqrck');
 
-    noidungck.innerText= id+"-"+xoaDauVaKhoangTrang(data.TenPhong)+"-"+data.NgayTinh
-
-    openForm('.form-hoadon-ma-cover');
     
+    noidungck.innerText = ndck;
+    maqrck.src = taomack;
+    maqrck.onload = function(){
+        hideLoading();
+        openForm('.form-hoadon-ma-cover');
+    };
 }
 function copyText(element) {
     const textToCopy = element.innerText.trim();

@@ -88,7 +88,7 @@ class ThongBaoController{
                 const phong = await Phong.getByMaND(nd.MaND);
                 return {
                     MaND: nd.MaND,
-                    Ten: (phong)?(nd.HoTen+" - "+ phong.Ten):(nd.HoTen +" - Chủ trọ")
+                    Ten: (phong.MaPhong)?(nd.HoTen+" - "+ phong.Ten):(nd.HoTen +" - Chủ trọ")
                 }
             }))
             

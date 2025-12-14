@@ -20,8 +20,7 @@ class HopDongThueController{
         const year = new Date().getFullYear();
         const month = String(new Date().getMonth() + 1).padStart(2, '0'); 
         const day = String(new Date().getDate()).padStart(2, '0');
-        const temp = `${year}-${month}-${day}`;
-        const today = DateFormatter.formatToDDMMYYYY(temp);
+        const today = `${year}-${month}-${day}`;
 
         const dshdt = await Promise.all(hopdongthue.map(async (hd) => {
             
@@ -39,7 +38,7 @@ class HopDongThueController{
                 phong: p,
                 giadien: giadn.GiaDien,
                 gianuoc: giadn.GiaNuoc,
-                trangthai: (DateFormatter.parseDatevn(hd.NgayKT)>DateFormatter.parseDatevn(today))
+                trangthai: (DateFormatter.parseDate(hd.NgayKT)>DateFormatter.parseDate(today))
             };
         }));
         res.render('pages/admin/hopDong',{
@@ -133,9 +132,8 @@ class HopDongThueController{
             
             const dsPT = [...pthdt_marked, ...phongTrong_marked];
             const dsNT = [...nthdt_marked, ...nguoiTrong_marked];
-            console.log(dsPT);
 
-            // 3. Trả về JSON gồm 2 danh sách này
+            console.log(hdt)
             res.json({
                 HDT: hdt,
                 dsPhong: dsPT,
@@ -183,7 +181,7 @@ class HopDongThueController{
             } else {
                 console.log("Không có người thuê nào được chọn.");
             }
-            return res.redirect('/admin/hopDong?status=them&highlight='+hd.MaHDT);
+            return res.redirect('/admin/hopDong?status=themhdt&highlight='+hd.MaHDT);
         } catch (error) {
             res.status(500).redirect('/admin/hopDong?status=fail');
         }
@@ -216,7 +214,7 @@ class HopDongThueController{
             } else {
                 console.log("Không có người thuê nào được chọn.");
             }
-            return res.redirect('/admin/hopDong?status=sua&highlight='+id);
+            return res.redirect('/admin/hopDong?status=suahdt&highlight='+id);
         } catch (error) {
             res.status(500).redirect('/admin/hopDong?status=fail');
         }

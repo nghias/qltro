@@ -19,7 +19,7 @@ class DienNuocController{
                 ...dn,
                 TenPhong:phong.Ten,
                 isXoa: (phong.Ten)?false:true,
-                isSua: !((dh && dh.length > 0) || false)
+                isSua: (!dh.MaHD)
             };
         }))
         const giadn = await GiaDienNuoc.getByNew(); 
@@ -127,14 +127,16 @@ class DienNuocController{
     async suaCSDienNuoc(req, res) {
         try {
             const id = req.params.id;
+            const csDMoi = req.body.CSDM;
+            const csNMoi = req.body.CSNM;
             const data = {
-                SoDMoi: req.body.CSDM,
-                SoNMoi: req.body.CSNM
+                SoDMoi: parseInt(csDMoi.toString().replace(/\./g, '')),
+                SoNMoi: parseInt(csNMoi.toString().replace(/\./g, ''))
             }
             
             await CSDienNuoc.update(id,data);
 
-            res.redirect('/admin/diennuoc?status=sua');
+            res.redirect('/admin/diennuoc?status=sua&highlight='+id);
 
         } catch (error) {
             res.status(500).redirect('/admin/diennuoc?status=fail');

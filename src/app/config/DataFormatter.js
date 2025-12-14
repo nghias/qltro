@@ -36,12 +36,29 @@ class DateFormatter {
         // 4. Trả về chuỗi kết quả
         return `${formattedDay}/${formattedMonth}/${year}`;
     }
-    static parseDatevn(dateStr) {
-        // Tách chuỗi dựa vào dấu gạch chéo /
-        const [day, month, year] = dateStr.split('/');
-        // Tạo Date mới (Lưu ý: tháng trong JS tính từ 0 nên phải trừ 1)
+    static parseDate(dateStr) {
+        if (dateStr instanceof Date) {
+            return dateStr;
+        }
+        
+        if (!dateStr) return null;
+
+        let year, month, day;
+
+        if (dateStr.includes('-')) {
+            [year, month, day] = dateStr.split('-');
+        } else {
+            [day, month, year] = dateStr.split('/');
+        }
         return new Date(year, month - 1, day);
     }
-    
+
+    static checkSameMonthYear(dateStr1, dateStr2) {
+        if (dateStr1.getMonth() === dateStr2.getMonth() && dateStr1.getFullYear() === dateStr2.getFullYear()) {
+            return true; 
+        } else {
+            return false; 
+        }
+    }
 }
 module.exports={DateFormatter};

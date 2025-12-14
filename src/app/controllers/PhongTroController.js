@@ -51,7 +51,7 @@ class PhongTroContrroller{
         };
         
         const newPhong = await Phong.create(data);
-        return res.redirect('/admin/phongTro?status=them&highlight='+newPhong.MaPhong);
+        return res.redirect('/admin/phongTro?status=themp&highlight='+newPhong.MaPhong);
     }
     async suaPhongTro(req, res) {
         const id = req.params.id;

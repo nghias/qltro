@@ -127,7 +127,7 @@ class HoaDon {
 
         const sql = `
             INSERT INTO hoadon(MaCS, MaHDT, MaGia, TienPhong, TienDien, TienNuoc, PhuThu, NgayTinh, TrangThai) 
-            VALUES (?,?,?,?,?,?,?,CURRENT_DATE,'Chưa thanh toán')
+            VALUES (?,?,?,?,?,?,?,?,'Chưa thanh toán')
         `;
 
         const params = [
@@ -137,7 +137,8 @@ class HoaDon {
             data.TienPhong,
             data.TienDien,
             data.TienNuoc,
-            data.PhuThu
+            data.PhuThu,
+            data.NgayTinh
         ];
 
         const [result] = await pool.query(sql, params);

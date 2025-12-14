@@ -4,16 +4,16 @@ const HoaDon = require("../models/HoaDon");
 const PhuPhi = require("../models/PhuPhi");
 const GiaDienNuoc = require("../models/GiaDienNuoc");
 const CSDienNuoc = require("../models/CSDienNuoc");
+const { DateFormatter } = require('../config/DataFormatter');
 
 class HoaDonController{
     async hoaDonAdmin(req, res) {
         const dsHoaDonB = await HoaDon.getAll();
         const dsHoaDon = await Promise.all(dsHoaDonB.map(async (hd)=>{
             const phong = await Phong.getByMaHD(hd.MaHD);
-            const tenPhong = (phong && phong.length > 0) ? phong.Ten : "Không xác định";
             return {
                 ...hd,
-                TenPhong:tenPhong,
+                TenPhong: phong.Ten,
                 isKetThuc: HopDongThue.ktHetHDT(hd.MaHDT)
             };
         }))
@@ -69,6 +69,11 @@ class HoaDonController{
                 const gianuoc = parseInt(giadn.GiaNuoc.toString().replace(/\./g, ''));
 
                 const pp = await PhuPhi.getByMaHDT(hdt.MaHDT);
+                let today = new Date();
+                const csday = DateFormatter.parseDate(cs.NgayGhi);
+                if(DateFormatter.checkSameMonthYear(csday,today)){
+                    today= new Date(csday.getFullYear(),csday.getMonth(),10);
+                }
 
                 let tongpp =0;
                 await Promise.all(pp.map(async (p)=>{
@@ -77,7 +82,7 @@ class HoaDonController{
 
                 const tongdien = ttdien*giadien;
                 const tongnuoc = ttnuoc*gianuoc;
-                const giaphong = phong.Gia;
+                const giaphong = parseInt(phong.Gia.toString().replace(/\./g, ''));
 
                 const data = {
                     MaCS: cs.MaCS,
@@ -87,7 +92,7 @@ class HoaDonController{
                     TienDien: tongdien,
                     TienNuoc: tongnuoc,
                     PhuThu: tongpp,
-                    TrangThai: 'Chưa thanh toán'
+                    NgayTinh: today
                 }
                 await HoaDon.create(data);
 
@@ -132,7 +137,8 @@ class HoaDonController{
             const phongTro = await Phong.getByMaHD(id);
             res.json({
                 NgayTinh:hd.NgayTinh,
-                TenPhong: phongTro.Ten
+                TenPhong: phongTro.Ten,
+                TienTT: parseInt(hd.TongTien.toString().replace(/\./g, ''))
             });
         } catch (error) {
             console.error(error);

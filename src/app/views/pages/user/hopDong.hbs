@@ -1,4 +1,14 @@
-
+<script>
+    function formatDateToDDMMYYYY(d) {
+        const date = new Date(d);
+        const year = date.getFullYear();
+        // Tháng bắt đầu từ 0 nên phải +1, padStart(2, '0') để thêm số 0 đằng trước nếu < 10
+        const month = String(date.getMonth() + 1).padStart(2, '0'); 
+        const day = String(date.getDate()).padStart(2, '0');
+        
+        return `${day}-${month}-${year}`;
+    }
+</script>
 <div class="contract-card-cover row justify-content-center mb-5">
     <div class="search-bar-container">
         <form action="/admin/hopdong" method="get" class="input-group search-box" onsubmit="showLoading()">
@@ -23,11 +33,11 @@
             <div class="row mb-4">
                 <div class="col-md-6 col-12">
                     <span class="sub-label d-inline">Ngày bắt đầu:</span>
-                    <span class="info-value fw-bold ms-2">{{this.NgayBD}}</span>
+                    <span class="info-value fw-bold ms-2"><script>document.write(formatDateToDDMMYYYY('{{this.NgayBD}}'));</script></span>
                 </div>
                 <div class="col-md-6 col-12">
                     <span class="sub-label d-inline">Ngày kết thúc:</span>
-                    <span class="info-value fw-bold ms-2">{{this.NgayKT}}</span>
+                    <span class="info-value fw-bold ms-2"><script>document.write(formatDateToDDMMYYYY('{{this.NgayKT}}'));</script></span>
                 </div>
             </div>
 

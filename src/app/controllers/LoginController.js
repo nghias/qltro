@@ -24,12 +24,16 @@ class LoginContrroller{
                 if (userFound == null) {
                     return res.render('layouts/login', { 
                         isTrue: true,
-                        layout: 'login'
+                        layout: 'login',
+                        UserName: username,
+                        PassWord: password
                     });
                 }else if (!isMatch) {
                     return res.render('layouts/login', { 
                         isTrue: true,
-                        layout: 'login'
+                        layout: 'login',
+                        UserName: username,
+                        PassWord: password
                     });
                 }else{
                     const user = await NguoiDung.getByUsernameID(username, userFound.MaND);

@@ -9,11 +9,11 @@
             let type = 'success';
             
             switch (status) {
-                case 'them':
+                case 'themnd':
                     title = 'Đã thêm thành công!';
                     break;
                 
-                case 'sua':
+                case 'suand':
                     title = 'Đã sửa thành công!';
                     break;
 
@@ -67,7 +67,6 @@
             <button class="btn btn-main" type="submit">Tìm kiếm</button>
         </form>
         <button class="btn btn-main"
-            data-status="them"
         onclick="ThemNguoiDung()">Thêm người dùng</button>
     </div>
     {{#if empty}}
@@ -106,7 +105,7 @@
 </div>
 
 {{!-- Xóa --}}
-<div class="form-nguoidung-xn-cover form-cover z-3 fixed-top d-none justify-content-center align-items-center" 
+<div class="form-nguoidung-xn-cover form-cover z-4 fixed-top d-none justify-content-center align-items-center" 
 onclick="closeForm('.form-nguoidung-xn-cover')">
     <div class="p-3 rounded-2 w-auto h-auto position-relative" 
     onclick="event.stopPropagation()" 

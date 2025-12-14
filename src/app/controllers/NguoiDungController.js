@@ -54,7 +54,7 @@ class NguoiDungController{
             
             const newND = await NguoiDung.create(data);
             
-            return res.redirect('/admin/nguoiDung?status=themsua&highlight='+newND.MaND);
+            return res.redirect('/admin/nguoiDung?status=themnd&highlight='+newND.MaND);
         } catch (error) {
             res.status(500).redirect('/admin/nguoiDung?status=fail');
         }
@@ -85,7 +85,7 @@ class NguoiDungController{
             }
 
             await NguoiDung.update(id, data);
-            return res.redirect('/admin/nguoiDung?status=sua&highlight='+id);
+            return res.redirect('/admin/nguoiDung?status=suand&highlight='+id);
         } catch (error) {
             res.status(500).redirect('/admin/nguoiDung?status=fail');
         }
@@ -95,7 +95,7 @@ class NguoiDungController{
             const id = req.params.id;
             
             await NguoiDung.resetpass(id);
-            return res.redirect('/admin/nguoiDung?status=resetpass');
+            return res.redirect('/admin/nguoiDung?status=resetpass&highlight='+id);
         } catch (error) {
             res.status(500).redirect('/admin/nguoiDung?status=fail');
         }

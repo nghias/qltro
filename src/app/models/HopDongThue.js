@@ -4,8 +4,8 @@ const {DateFormatter} = require('../config/DataFormatter');
 class HopDongThue {
     constructor(data) {
         this.MaHDT = data.MaHDT;
-        this.NgayBD = DateFormatter.formatToDDMMYYYY(data.NgayBD);
-        this.NgayKT = DateFormatter.formatToDDMMYYYY(data.NgayKT);
+        this.NgayBD = data.NgayBD;
+        this.NgayKT = data.NgayKT;
         this.TienCoc = Number(data.TienCoc).toLocaleString('vi-VN');
         this.MaPhong = data.MaPhong;
 
