@@ -42,32 +42,40 @@ class PhongTroContrroller{
         }
     }
     async themPhongTro(req, res) {
-        let tenFileAnh = req.file ? req.file.filename : "logo.png";
-        const data = {
-            TenPhong: req.body.TenPhong,
-            Gia: req.body.Gia,
-            DienTich: req.body.DienTich,
-            Hinh: tenFileAnh
-        };
-        
-        const newPhong = await Phong.create(data);
-        return res.redirect('/admin/phongTro?status=themp&highlight='+newPhong.MaPhong);
+        try{
+            let tenFileAnh = req.file ? req.file.filename : "logo.png";
+            const data = {
+                TenPhong: req.body.TenPhong,
+                Gia: req.body.Gia,
+                DienTich: req.body.DienTich,
+                Hinh: tenFileAnh
+            };
+            
+            const newPhong = await Phong.create(data);
+            return res.redirect('/admin/phongTro?status=themp&highlight='+newPhong.MaPhong);
+        }catch (error) {
+            res.status(500).redirect('/admin/phongTro?status=fail');
+        }
     }
     async suaPhongTro(req, res) {
-        const id = req.params.id;
-        const Ten = req.body.TenPhong;
-        const Gia = req.body.Gia;
-        const DienTich = req.body.DienTich;
-        const HinhCu = req.body.HinhCu;
+        try{
+            const id = req.params.id;
+            const Ten = req.body.TenPhong;
+            const Gia = req.body.Gia;
+            const DienTich = req.body.DienTich;
+            const HinhCu = req.body.HinhCu;
 
-        let tenFileAnh = req.file ? req.file.filename : HinhCu;
+            let tenFileAnh = req.file ? req.file.filename : HinhCu;
 
-        if(req.file && HinhCu != 'logo.png'){
-            deleteImage(HinhCu);
+            if(req.file && HinhCu != 'logo.png'){
+                deleteImage(HinhCu);
+            }
+
+            const phong = await Phong.update(id, Ten, DienTich, Gia, tenFileAnh);
+            return res.redirect('/admin/phongTro?status=suap&highlight='+phong.MaPhong);
+         }catch (error) {
+            res.status(500).redirect('/admin/phongTro?status=fail');
         }
-
-        const phong = await Phong.update(id, Ten, DienTich, Gia, tenFileAnh);
-        return res.redirect('/admin/phongTro?status=suap&highlight='+phong.MaPhong);
     }
     async xoaPhongTro(req, res) {
         const id = req.params.id;
@@ -75,7 +83,7 @@ class PhongTroContrroller{
         if(HinhCu!='logo.png') deleteImage(HinhCu);
 
         await Phong.delete(id);
-        return res.redirect('/admin/phongTro?status=xoap');
+        return res.redirect('/admin/phongTro?status=xoa');
     }
 }
 module.exports = new PhongTroContrroller

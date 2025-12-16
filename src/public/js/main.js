@@ -1263,8 +1263,8 @@ function TaoFormChiSo() {
 
         const data = await response.json(); 
 
-        const SoDCu = Number((data.cs.SoDCu).replace(/\./g, ''));
-        const SoNCu = Number((data.cs.SoNCu).replace(/\./g, ''));
+        const SoDCu = Number((data.cs.SoDMoi).replace(/\./g, ''));
+        const SoNCu = Number((data.cs.SoNMoi).replace(/\./g, ''));
 
         if(!dien) {
             showErr(dienInput,dienErr, 'Vui lòng nhập chỉ số điện')

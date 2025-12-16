@@ -13,10 +13,10 @@ const config = {
     connectionLimit: 10,
     queueLimit: 0,
     
-    ssl: {
-        minVersion: 'TLSv1.2',
-        rejectUnauthorized: true
-    }
+    // ssl: {
+    //     minVersion: 'TLSv1.2',
+    //     rejectUnauthorized: true
+    // }
 };
 
 async function connectDB() {
