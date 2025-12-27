@@ -17,7 +17,7 @@ class ThongBao {
         const [rows] = await pool.query(
             `SELECT * FROM thongbao
             Where NDGui = ? OR NDNhan = ?
-            ORDER BY NgayGui`,
+            ORDER BY NgayGui DESC`,
             [id, id]
         );
         await pool.end();
@@ -64,7 +64,7 @@ class ThongBao {
         const [rows] = await pool.query(
             `SELECT * FROM thongbao
             WHERE NDNhan=?
-            ORDER BY NgayGui`,
+            ORDER BY NgayGui DESC`,
             [id]
         );
         await pool.end();
@@ -77,7 +77,7 @@ class ThongBao {
         const [rows] = await pool.query(
             `SELECT * FROM thongbao
             WHERE NDGui=?
-            ORDER BY NgayGui`,
+            ORDER BY NgayGui DESC`,
             [id]
         );
         await pool.end();
