@@ -420,74 +420,91 @@
     </div>
   </div>
 </nav>
-<script>
-document.addEventListener("DOMContentLoaded", async function() {
-  const quyen = '{{role}}';
-  const id = '{{info.MaND}}';
-  async function layDL(){
 
+<script src="https://cdn.socket.io/4.7.2/socket.io.min.js"></script>
+
+<script>
+
+const quyen = '{{role}}';
+const id = '{{info.MaND}}'; 
+
+const capNhatGiaoDien = async () => {
+  try {
+      const newData = await layDL(); 
+      
+      if(newData) {
+          if (typeof renderBadge === 'function') {
+              renderBadge(newData.tbcd);
+          }
+          if (typeof renderNotifications === 'function') {
+              renderNotifications(newData.tb);
+          }
+      }
+  } catch (error) {
+      console.error("Lỗi khi cập nhật dữ liệu:", error);
+  }
+};
+
+async function layDL(){
     const response = await fetch(`/${quyen}/thongbao/laydulieuthongbao/${id}`);
-    
     if (!response.ok) {
-        alert("Không lấy được dữ liệu!");
-        return;
+          console.error("Lỗi fetch data");
+          return;
     }
     const data = await response.json();
     return data; 
-  }
+}
 
-  async function renderBadge(data){
+async function renderBadge(data){
+    // (Giữ nguyên code cũ của bạn)
     const badge = document.querySelectorAll('.notification-badge');
-
     badge.forEach(i => {
-      const soTBChuaDoc = (data < 10) ? data : "9+";
-      if(soTBChuaDoc == 0){
-        i.classList.add('d-none');
-        i.classList.remove('d-block');
-      }else{
-        i.classList.remove('d-none');
-        i.classList.add('d-block');
-        i.innerText = soTBChuaDoc;
-      }
+        const soTBChuaDoc = (data < 10) ? data : "9+";
+        if(data == 0){ 
+            i.classList.add('d-none');
+            i.classList.remove('d-block');
+        }else{
+            i.classList.remove('d-none');
+            i.classList.add('d-block');
+            i.innerText = soTBChuaDoc;
+        }
     });
-  }
+}
 
-  async function renderNotifications(data) {
+async function renderNotifications(data) {
     const listElements = document.querySelectorAll('.notify-list');
+    if (listElements.length === 0) return;
 
-    if (listElements.length === 0) {
-        console.error("Không tìm thấy thẻ .notify-list nào cả!");
-        return;
+    let htmlString = "";
+    if (!data || data.length === 0) {
+        htmlString = `<li><span class="notify-item text-muted" style="cursor: default; display:block; padding: 10px;">Không có thông báo nào</span></li>`;
+    } else {
+        const itemsToShow = data.slice(0, 5);
+        htmlString = itemsToShow.map(item => {
+            const activeClass = (item.TrangThai=="Chưa đọc") ? 'highlight' : ''; 
+            return `
+                <li>
+                    <a class="notify-item ${activeClass}" href="/${quyen}/thongbao/chitiet/${item.MaTB}?ma={{info.MaND}}">
+                        [${item.TieuDe}] ${item.NoiDung}
+                    </a>
+                </li>
+            `;
+        }).join('');
     }
-      let htmlString = "";
+    listElements.forEach(ul => { ul.innerHTML = htmlString; });
+}
 
-      if (!data || data.length === 0) {
-          htmlString = `
-              <li>
-                  <span class="notify-item text-muted" style="cursor: default; display:block; padding: 10px;">
-                      Không có thông báo nào
-                  </span>
-              </li>`;
-      } else {
-          const itemsToShow = data.slice(0, 5);
-          htmlString = itemsToShow.map(item => {
-              const activeClass = (item.TrangThai=="Chưa đọc") ? 'highlight' : '';
-              return `
-                  <li>
-                      <a class="notify-item ${activeClass}" href="/${quyen}/thongbao/chitiet/${item.MaTB}?ma={{info.MaND}}">
-                          [${item.TieuDe}] ${item.NoiDung}
-                      </a>
-                  </li>
-              `;
-          }).join('');
-      }
-      listElements.forEach(ul => {
-          ul.innerHTML = htmlString;
-    });
-  }
+const socket = io(); 
+socket.emit('dang_nhap_he_thong', id);
 
-  const data = await layDL();
-  renderBadge(data.tbcd);
-  renderNotifications(data.tb);
+setInterval(() => {
+    setTimeout(() => {
+        capNhatGiaoDien();
+    }, 5000);
+
+}, 10000); 
+
+document.addEventListener("DOMContentLoaded", async function() {
+    capNhatGiaoDien();
 });
 </script>

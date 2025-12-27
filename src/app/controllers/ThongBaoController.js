@@ -100,36 +100,53 @@ class ThongBaoController{
             res.status(500).json({ error: 'Lỗi server' });
         }
     }
-    async themThongBao(req, res){
+    async themThongBao(req, res) {
         try {
             const ma = req.params.id;
-            
-            let dsNN = req.body.NNhan || []; 
+
+            const nDGuiInfo = await NguoiDung.getById(ma);
+
+            let dsNN = req.body.NNhan || [];
             if (!Array.isArray(dsNN)) {
                 dsNN = [dsNN];
             }
+
             if (dsNN.length > 0) {
                 await Promise.all(dsNN.map(async (mand) => {
                     const data = {
                         NDGui: ma,
                         NDNhan: mand,
                         TieuDe: req.body.TieuDe,
-                        NoiDung:  req.body.NoiDung
+                        NoiDung: req.body.NoiDung,
+                        TrangThai: 'Chưa đọc', 
+                        NgayGui: new Date() 
                     }
-                    
-                    await ThongBao.create(data);
+
+                    const newTB = await ThongBao.create(data);
+
+                    // if (req.io) {
+                    //     req.io.to(`user_${mand}`).emit('thong_bao_moi', {
+                    //         MaTB: newTB?.insertId || null,
+                    //         TieuDe: data.TieuDe,
+                    //         NoiDung: data.NoiDung,
+                    //         NDGui: nDGuiInfo.HoTen,
+                    //         ThoiGian: data.NgayGui,
+                    //         TrangThai: 'Chưa đọc'
+                    //     });
+                    // }
                 }));
             } else {
                 console.log("Không có người nào được chọn.");
             }
 
             const dsthongbao = await ThongBao.getAll(ma);
-            const nd = await NguoiDung.getById(ma);
+            const nd = nDGuiInfo;
+
             if (!dsthongbao || dsthongbao.length === 0) {
                 return res.render(`pages/${nd.Quyen}/thongBao`, { empty: true });
             }
+            
             const tongSoThongBao = dsthongbao.filter(i => i.TrangThai === "Chưa đọc").length;
-
             const thongbao = await Promise.all(dsthongbao.map(async (tb) => {
                 const nDNhan = await NguoiDung.getById(tb.NDNhan);
                 const nDGui = await NguoiDung.getById(tb.NDGui);
@@ -141,17 +158,19 @@ class ThongBaoController{
                 }
             }));
 
-            res.render(`pages/${nd.Quyen}/thongBao`,{
+            res.render(`pages/${nd.Quyen}/thongBao`, {
                 thongbao,
                 tongSoThongBao,
                 ma: ma,
                 role: nd.Quyen
             });
+
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Lỗi server' });
         }
     }
+    
     async traLoiThongBao(req, res){
         try {
             const ma = req.params.id;
@@ -193,7 +212,7 @@ class ThongBaoController{
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Lỗi server' });
-        }
+        }   
     }
     async daDocThongBao(req, res){
         try {
@@ -330,11 +349,9 @@ class ThongBaoController{
             // Mã người dùng
             const ma = req.query.ma;
 
-            let dsthongbao;
-
             await ThongBao.delete(id);
 
-            dsthongbao = await ThongBao.getAll(ma);
+            const dsthongbao = await ThongBao.getAll(ma);
             const nd = await NguoiDung.getById(ma);
             if (!dsthongbao || dsthongbao.length === 0) {
                 return res.render(`pages/${nd.Quyen}/thongBao`, { empty: true });
@@ -354,11 +371,10 @@ class ThongBaoController{
 
             res.render(`pages/${nd.Quyen}/thongBao`,{
                 thongbao,
-                tongSoThongBao,ma: 
-                ma,
+                tongSoThongBao,
+                ma: ma,
                 role: nd.Quyen
             });
-            
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Lỗi server' });
@@ -371,17 +387,13 @@ class ThongBaoController{
 
             const { ids } = req.body;
 
-            let dsthongbao;
-
             if(ids && ids.length > 0){
                 for (const id of ids) {
                     await ThongBao.delete(id);
                 }
             }
 
-            
-
-            dsthongbao = await ThongBao.getAll(ma);
+            const dsthongbao = await ThongBao.getAll(ma);
             const nd = await NguoiDung.getById(ma);
             if (!dsthongbao || dsthongbao.length === 0) {
                 return res.render(`pages/${nd.Quyen}/thongBao`, { empty: true });
@@ -401,11 +413,10 @@ class ThongBaoController{
 
             res.render(`pages/${nd.Quyen}/thongBao`,{
                 thongbao,
-                tongSoThongBao,ma: 
-                ma,
+                tongSoThongBao,
+                ma: ma,
                 role: nd.Quyen
             });
-            
         } catch (error) {
             console.error(error);
             res.status(500).json({ error: 'Lỗi server' });

@@ -6,9 +6,28 @@ const route = require("./routers");
 const session = require("express-session");
 const methodOverride = require('method-override');
 const helmet = require('helmet');
+const http = require('http');
+const { Server } = require("socket.io");
+const PORT = process.env.PORT || 3000;
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+
+
+const server = http.createServer(app);
+const io = new Server(server);
+
+io.on('connection', (socket) => {
+//   console.log('Có người kết nối socket:', socket.id);
+  socket.on('dang_nhap_he_thong', (userId) => {
+      if (userId) {
+          const roomName = 'user_' + userId;
+          socket.join(roomName);
+        //   console.log(`User ${userId} đã join vào phòng: ${roomName}`);
+      }
+  });
+});
+
+
 
 app.enable('trust proxy');
 app.use(express.urlencoded({ extended: true }));
@@ -51,8 +70,13 @@ app.engine("hbs", engine({
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname, "app","views"));
 
+app.use((req, res, next) => {
+    req.io = io;
+    next();
+});
+
 route(app);
 
-app.listen(PORT, () => {
-    console.log("Server chạy ở cổng " + PORT);
+server.listen(3000, () => {
+  console.log('Server đang chạy tại http://localhost:3000');
 });
