@@ -88,8 +88,8 @@ class ThongBao {
         const pool = await db();
 
         const sql = `
-            INSERT INTO thongbao(NDGui, NDNhan, TieuDe, NoiDung, TrangThai) 
-            VALUES (?,?,?,?,'Chưa đọc')
+            INSERT INTO thongbao(NDGui, NDNhan, TieuDe, NoiDung, NgayGui, TrangThai) 
+            VALUES (?,?,?,?, CURRENT_DATE,'Chưa đọc')
         `;
 
         const params = [
