@@ -37,6 +37,7 @@ class ThongBao {
                 OR tb.NoiDung LIKE ? 
                 OR nd.HoTen LIKE ?)
                 AND (NDGui = ? OR NDNhan = ?)
+            ORDER BY NgayGui DESC
         `;
 
         const [rows] = await pool.query(sql, [searchTerm, searchTerm, searchTerm, id, id]);
