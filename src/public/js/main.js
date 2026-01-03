@@ -104,6 +104,32 @@ function formatDateToDDMMYYYY(d) {
     
     return `${day}-${month}-${year}`;
 }
+
+// Hàm xử lý ẩn hiện password
+function setupPasswordToggle(inputId, toggleId, iconId) {
+    const input = document.getElementById(inputId);
+    const toggleBtn = document.getElementById(toggleId);
+    const icon = document.getElementById(iconId);
+
+    if(toggleBtn){
+        toggleBtn.addEventListener('click', function () {
+            // Kiểm tra trạng thái hiện tại
+            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
+            
+            // Đổi type input
+            input.setAttribute('type', type);
+            
+            // Đổi icon
+            if (type === 'text') {
+                icon.classList.remove('bi-eye');
+                icon.classList.add('bi-eye-slash');
+            } else {
+                icon.classList.remove('bi-eye-slash');
+                icon.classList.add('bi-eye');
+            }
+        });
+    }
+}
 // -------------------------------------
 //              Form
 // -------------------------------------
@@ -437,6 +463,7 @@ vaidaAnh('Hinh','#anhPhongError',0);
 const formPhong = document.querySelector('.form-phong');
 if(formPhong){
     formPhong.addEventListener("submit", function (e) {
+        e.preventDefault();
 
         let hasError = false;
 
@@ -481,8 +508,8 @@ if(formPhong){
         }
 
         // NGĂN SUBMIT
-        if (hasError) {
-            e.preventDefault();
+        if (!hasError) {
+            e.currentTarget.submit(); 
         }
     });
 }
@@ -548,7 +575,7 @@ async function SuaNguoiDung(id) {
         document.getElementsByName("NamSinhND")[0].value = formatDateToInput(data.NamSinh);
         document.getElementsByName("SDTND")[0].value = data.SDT;
         document.getElementsByName("ThuongTruND")[0].value = data.ThuongTru;
-        document.getElementById("street").value = (data.ThuongTru).split(',')[0].trim();
+        document.getElementById("street").value = (data.ThuongTru).split(',').trim();
         document.getElementsByName("QuyenND")[0].value = data.Quyen;
         document.getElementsByName("HinhNDCu")[0].value = data.AVT;
         
@@ -614,6 +641,7 @@ vaidaAnh('HinhND','#HinhNDError',0);
 const formNguoiDung = document.querySelector('.form-nguoidung');
 if(formNguoiDung) {
     formNguoiDung.addEventListener("submit", function (e) {
+        e.preventDefault();
 
         let hasError = false;
 
@@ -682,8 +710,8 @@ if(formNguoiDung) {
         }
 
         // NGĂN SUBMIT
-        if (hasError) {
-            e.preventDefault();
+        if (!hasError) {
+            e.currentTarget.submit(); 
         }
     });
 }
@@ -709,10 +737,10 @@ async function CapNhatThongTin(id, role) {
         document.getElementsByName("NamSinhND")[0].value = formatDateToInput(data.NamSinh);
         document.getElementsByName("SDTND")[0].value = data.SDT;
         document.getElementsByName("ThuongTruND")[0].value = data.ThuongTru;
-        document.getElementById("street").value = (data.ThuongTru).split(',')[0].trim();
+        document.getElementById("street").value = (data.ThuongTru).split(',').trim();
         document.getElementsByName("QuyenND")[0].value = "";
         document.getElementsByName("HinhNDCu")[0].value = data.AVT;
-        
+
         // Xử lý ảnh (nếu có)
         if(data.AVT) {
             document.querySelector('.AVTND').src = '/img/'+data.AVT;
@@ -730,33 +758,6 @@ async function CapNhatThongTin(id, role) {
     }
 }
 
-// Hàm xử lý ẩn hiện password
-function setupPasswordToggle(inputId, toggleId, iconId) {
-    const input = document.getElementById(inputId);
-    const toggleBtn = document.getElementById(toggleId);
-    const icon = document.getElementById(iconId);
-
-    if(toggleBtn){
-        toggleBtn.addEventListener('click', function () {
-            // Kiểm tra trạng thái hiện tại
-            const type = input.getAttribute('type') === 'password' ? 'text' : 'password';
-            
-            // Đổi type input
-            input.setAttribute('type', type);
-            
-            // Đổi icon
-            if (type === 'text') {
-                icon.classList.remove('bi-eye');
-                icon.classList.add('bi-eye-slash');
-            } else {
-                icon.classList.remove('bi-eye-slash');
-                icon.classList.add('bi-eye');
-            }
-        });
-    }
-}
-
-// Gọi hàm cho 3 ô input tương ứng
 setupPasswordToggle('MKCInput', 'toggleMKC', 'iconMKC');      
 setupPasswordToggle('MKMInput', 'toggleMKM', 'iconMKM');       
 setupPasswordToggle('XNMKMInput', 'toggleXNMKM', 'iconXNMKM');
@@ -769,10 +770,10 @@ const formDMK = document.querySelector('.form-doimk');
 
 if(formDMK) {
     formDMK.addEventListener("submit", function (e) {
+        e.preventDefault();
 
         let hasError = false;
 
-        // LẤY INPUT (ELEMENT)
         const mkcInput = document.getElementsByName("MKC")[0];
         const mkmInput = document.getElementsByName("MKM")[0];
         const xnmkmInput = document.getElementsByName("XNMKM")[0];
@@ -782,27 +783,29 @@ if(formDMK) {
         const xnmkm = xnmkmInput.value.trim();
 
         if (mkc === "") {
-            showErr(passInput, document.querySelector("#MKCError"), "Mật khẩu không được để trống");
+            showErr(mkcInput, document.querySelector("#MKCError"), "Mật khẩu củ không được để trống");
             hasError = true;
         }
         if (mkm === "") {
-            showErr(passInput, document.querySelector("#MKMError"), "Mật khẩu không được để trống");
+            showErr(mkmInput, document.querySelector("#MKMError"), "Mật khẩu mới không được để trống");
             hasError = true;
         }
         if (xnmkm === "") {
-            showErr(passInput, document.querySelector("#XNMKMError"), "Mật khẩu không được để trống");
+            showErr(xnmkmInput, document.querySelector("#XNMKMError"), "Xác nhận mật khẩu mới không được để trống");
             hasError = true;
         }
-
+        if (mkm === mkc) {
+            showErr(mkmInput, document.querySelector("#MKMError"), "Mật khẩu mới không được giống mật khẩu cũ");
+            hasError = true;
+        }
         if (xnmkm !== mkm) {
-            showErr(passInput, document.querySelector("#XNMKMError"), "Mật khẩu mới và xác nhận mật không phải giống nhau");
-            showErr(passInput, document.querySelector("#MKMError"), "Mật khẩu mới và xác nhận mật không phải giống nhau");
+            showErr(xnmkmInput, document.querySelector("#XNMKMError"), "Mật khẩu mới và xác nhận mật không phải giống nhau");
             hasError = true;
         }
 
-        // NGĂN SUBMIT
-        if (hasError) {
-            e.preventDefault();
+        if (!hasError) {
+            console.log("submit đổi mk");
+            e.currentTarget.submit(); 
         }
     });
 }
@@ -1169,8 +1172,8 @@ if(formPhuPhi) {
         }
 
         if (!hasError) {
-             console.log("Dữ liệu chuẩn, đang gửi...");
-             e.currentTarget.submit(); 
+            console.log("Dữ liệu chuẩn, đang gửi...");
+            e.currentTarget.submit(); 
         }
     });
 }
@@ -1327,7 +1330,7 @@ function TaoFormChiSo() {
             
             dataJsonHidden.value = jsonString;
 
-            formFinal.submit();
+            e.currentTarget.submit(); 
         });
     }
 
@@ -1399,7 +1402,7 @@ if(formSuaDN) {
         }
 
         if (!hasError) {
-             e.currentTarget.submit(); 
+            e.currentTarget.submit(); 
         }
     });
 }
@@ -1670,7 +1673,7 @@ if(formSoanTB) {
         }
 
         if (!hasError) {
-             e.currentTarget.submit(); 
+            e.currentTarget.submit(); 
         }
     });
 }
@@ -1707,7 +1710,7 @@ if(formTLTB) {
         }
 
         if (!hasError) {
-             e.currentTarget.submit(); 
+            e.currentTarget.submit(); 
         }
     });
 }
@@ -1747,12 +1750,12 @@ const fullAddressInput = document.getElementById("fullAddress");
 var dataVietnam = [];
 axios.get('https://raw.githubusercontent.com/kenzouno1/DiaGioiHanhChinhVN/master/data.json')
     .then((response) => {
-        dataVietnam = response.data; 
-        renderOptions(dataVietnam, "province"); 
+        dataVietnam = response.data;
+        renderOptions(dataVietnam, "province");
+
     })
     .catch((error) => {
         console.error("Lỗi tải dữ liệu:", error);
-        alert("Không tải được dữ liệu hành chính. Vui lòng kiểm tra mạng!");
     });
 
 var renderOptions = (arrayData, type) => {

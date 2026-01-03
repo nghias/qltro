@@ -168,6 +168,34 @@
         }
     </style>
 </head>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const status = urlParams.get('status');
+
+        if (status) {
+            let title = '';
+            let type = 'success';
+            
+            switch (status) {
+                case 'doimk':
+                    title = 'Đã đổi mật khẩu thành công!';
+                    break;
+
+                case 'fail': 
+                    title = 'Thao tác thất bại!';
+                    type = 'failure';
+                    break;
+
+                default:
+                    return; 
+            }
+            showNotification(type, title,);
+        }
+        const newUrl = window.location.pathname;
+        window.history.replaceState(null, null, newUrl);
+    });
+</script>
 <body class="main" style="cursor: default;">
     <nav class="navbar navbar-expand-lg p-0 fixed-top mt-2 ">
         <div class="container-fluid w-50 header-color rounded-5">

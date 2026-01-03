@@ -315,25 +315,24 @@ class NguoiDung {
 
         return this.getById(result.insertId);
     }
-        static async updatepass(id, data) {
+    static async updatepass(id, MatKhauMoi) {
         const pool = await db();
 
         const sql = `
             UPDATE NguoiDung
             SET MatKhau = ?
-            WHERE MaND = ? AND MatKhau = ?
+            WHERE MaND = ?
         `;
 
         const params = [
-            data.MatKhauMoi,
-            id,
-            data.MatKhauCu
+            MatKhauMoi,
+            id
         ];
 
         const [result] = await pool.query(sql, params);
         await pool.end();
 
-        return this.getById(result.insertId);
+        return  this.getById(id);
     }
 
     // ----------- 3. XÓA NGƯỜI DÙNG (DELETE) -----------

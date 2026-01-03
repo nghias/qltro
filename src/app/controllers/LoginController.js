@@ -124,17 +124,14 @@ class LoginContrroller{
     }
     async mkupdate(req, res){
         try {
-            const btnLuuCMK = req.body?.btnLuuCMK || 0;
-            if(btnLuuCMK){
-
-                const data = {
-                    MatKhauCu: req.body.MKC,
-                    MatKhauMoi: await bcrypt.hash(req.body.MKM)
-                }
-
-                await NguoiDung.updatepass(req.body.MaNDCMK, data);
+            const MatKhauMoi = await bcrypt.hash(req.body.MKM);
+            const userFound = await NguoiDung.getById(req.body.MaNDCMK);
+            const isMatch = await bcrypt.compare(req.body.MKC,userFound.MatKhau);
+            if (isMatch) {
+                await NguoiDung.updatepass(req.body.MaNDCMK, MatKhauMoi);
                 return res.redirect('/');
             }
+            return res.redirect('/'+req.session.user.role+'/?status=doimk');
         } catch (error) {
             res.status(500).json({ error: 'Lỗi cập nhật mật khẩu' });
         }
